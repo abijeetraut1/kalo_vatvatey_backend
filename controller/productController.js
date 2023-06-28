@@ -32,7 +32,8 @@ const statusFunc = (res, status, message) => {
 }
 
 exports.create_product = catchAsync(async (req, res) => { 
-    console.log(req.files);
+    // console.log(req.headers.cookie);
+
     const imagesName = [];
     req.files.forEach(ele => {
         imagesName.push(ele.filename)
@@ -47,7 +48,8 @@ exports.create_product = catchAsync(async (req, res) => {
         modal: req.body.modal,
         images: imagesName,
         shortDescription: req.body.shortDescription,
-        // userId: res.locals.userData.id
+        userId: res.locals.userData.id,
+        vehicleBrandId: req.body.vehicleId
     })
 
     statusFunc(res, 201, created_product);

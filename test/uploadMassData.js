@@ -65,10 +65,10 @@ const uploadScooty = async (data) => {
     await scooty.create({
         companyName: data.company.toLowerCase(),
         engineType: data.type.toLowerCase(),
-        vehicleType:"scooty"
+        vehicleType:"bike"
     })
 }
 
-scooty_list.forEach(ele => {
-    uploadScooty(ele)
-});
+// bike_list.forEach(ele => {
+//     uploadScooty(ele)
+// });

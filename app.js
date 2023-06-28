@@ -24,6 +24,8 @@ const corsOptions = {
 app.use(cookieParser());
 
 // page gateway
+// app.use("*", {})
+
 app.use("/api/v1/user", cors(corsOptions), userRouter);
 app.use("/api/v1/products", cors(corsOptions), productRouter);
 app.use("/api/v1/admin", cors(corsOptions), adminRouter);  // -> super admin pannel

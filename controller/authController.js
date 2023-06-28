@@ -138,13 +138,16 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
 // check user is logged in or not
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
-    if(!req.body.cookie){
+    if(!req.headers.token){
         return statusFunc(res, 404, "please login")
     }
-    const jwtDecode = jwt.verify(req.body.cookie, process.env.JWT_SECRET);
+
+    const jwtDecode = jwt.verify(req.headers.token, process.env.JWT_SECRET);
+    
     if (jwtDecode.iat > jwtDecode.exp) {
         return statusFunc(res, 200, "expired cookie");
     }
+    
     const findUser = await user.findOne({
         where: {
             id: jwtDecode.id
