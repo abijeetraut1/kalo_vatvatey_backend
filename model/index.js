@@ -30,7 +30,7 @@ db.products = require("./dataModel/productsModel")(sequelize, DataTypes);
 db.reviews = require("./dataModel/reviewModel")(sequelize, DataTypes);
 db.favourites = require("./dataModel/favourite")(sequelize, DataTypes);
 db.addToCarts = require("./dataModel/addToCart")(sequelize, DataTypes);
-db.brands = require("./dataModel/brandModel")(sequelize, DataTypes);
+db.brands = require("./dataModel/vehicleCompany")(sequelize, DataTypes);
 
 // relation reviews
 db.users.hasMany(db.reviews);

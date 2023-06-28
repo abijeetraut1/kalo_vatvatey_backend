@@ -69,6 +69,6 @@ const uploadScooty = async (data) => {
     })
 }
 
-// bike_list.forEach(ele => {
-//     uploadScooty(ele)
-// });
+bike_list.forEach(ele => {
+    uploadScooty(ele)
+});

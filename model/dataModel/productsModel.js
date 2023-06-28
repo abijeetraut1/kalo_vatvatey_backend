@@ -4,53 +4,51 @@ module.exports = (sequelize, Sequelize) => {
     const Product = sequelize.define("products", {
         name: {
             type: Sequelize.STRING,
-            allowNull: true
         },
-        brand: {
+        company: {
             type: Sequelize.INTEGER,
-            allowNull: true
         },
         years: {
-            type: Sequelize.STRING,  
-            allowNull: true
+            type: Sequelize.STRING,
         },
         price: {
             type: Sequelize.STRING,
-            allowNull: true
         },
-        description:{
+        description: {
             type: Sequelize.STRING,
-            allowNull: true
         },
-        modal:{
+        category: {
+            type: Sequelize.STRING
+        },
+        modal: {
             type: Sequelize.STRING,
-            allowNull: true
         },
-        images:{
+        images: {
             type: Sequelize.JSON,
-            allowNull: true
         },
-        shortDescription:{
+        shortDescription: {
             type: Sequelize.STRING,
-            allowNull: true
         },
-        userId:{
+        userId: {
             type: Sequelize.INTEGER,
-            // allowNull: true
         }
     })
 
     return Product;
 }
 
-
-/*
-    STRING = 250 WORDS
-    TEXT = 500 W0RDS
-*/
-
+// foregin id ko lagi schema ma banai rakhnu pardaina
 
 // ITEMS TO BE ADDED 
 // 1. CATEGORY
 // 2. BRAND SHOULD BE ID
 // 2. 
+
+// category
+// EV
+// SPORTS
+// CLASSIC 
+// ADVENTURE
+// SCOOTERS
+// OFFROAD
+// SUPERMOTO

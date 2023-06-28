@@ -3,6 +3,7 @@ const process = require("node:process");
 
 const catchAsync = require('../utils/catchAsync');
 const database = require('./../model/index');
+const vehicleCompany = require("../model/dataModel/vehicleCompany");
 const product = database.products;
 const addToCart = database.addToCarts;
 const favourite = database.favourites;
@@ -10,9 +11,9 @@ const favourite = database.favourites;
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
-    if(file.mimetype.startsWith("image")){
+    if (file.mimetype.startsWith("image")) {
         cb(null, true);
-    }else{
+    } else {
         console.log("image not found");
         process.exit(1);
     }
@@ -31,25 +32,24 @@ const statusFunc = (res, status, message) => {
     })
 }
 
-exports.create_product = catchAsync(async (req, res) => { 
-    // console.log(req.headers.cookie);
-
+exports.create_product = catchAsync(async (req, res) => {
     const imagesName = [];
     req.files.forEach(ele => {
         imagesName.push(ele.filename)
     });
-    
+
     const created_product = await product.create({
         name: req.body.name,
-        brand: req.body.brand,
+        company: req.body.company, // brand
         years: req.body.years,
-        description: req.body.description,
         price: req.body.price,
+        description: req.body.description,
         modal: req.body.modal,
         images: imagesName,
         shortDescription: req.body.shortDescription,
         userId: res.locals.userData.id,
-        vehicleBrandId: req.body.vehicleId
+        category: req.body.category,
+        vehicleCompanyId: 1  
     })
 
     statusFunc(res, 201, created_product);
@@ -143,7 +143,7 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
         }
     })
 
-    if(checkFavourite){
+    if (checkFavourite) {
         return statusFunc(res, 403, "already added in favourite");
     }
 
