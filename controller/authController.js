@@ -6,8 +6,6 @@ require("dotenv").config({
 const bcrypt = require('bcrypt');
 const catchAsync = require("../utils/catchAsync");
 const statusFunc = require("../utils/statusFunc");
-const sendMail = require("../utils/sendMail");
-
 
 // deconstruction
 const user = database.users;
@@ -38,33 +36,30 @@ const jwt_signin = (id) => {
 
 // SIGNUP
 exports.signup = async (req, res) => {
-    // const checkAlreadyLogin = await user.findOne({
-    //     where: {
-    //         email: req.body.email
-    //     }
-    // })
+    const checkAlreadyLogin = await user.findOne({
+        where: {
+            email: req.body.email
+        }
+    })
 
-    // if (checkAlreadyLogin) {
-    //     return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
-    // }
+    if (checkAlreadyLogin) {
+        return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
+    }
     
     const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
-
-    // const createUserAccount = await user.create({
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName,
-    //     email: req.body.email,
-    //     password: await bcrypt.hash(req.body.password, 12),
-    //     role: req.body.role ? "admin" : "user",
-    //     isVerified: false,
-    //     verificationCode: code
-    // })
-    // send mail
-    sendMail(req.body.email, code);
-    // createCookies(res, 201, "createUserAccount");
-    res.json({
-        message: "success"
+    const createUserAccount = await user.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        contact: req.body.phoneno,
+        password: await bcrypt.hash(req.body.password, 12),
+        role: req.body.role ? "admin" : "user",
+        isVerified: false,
+        verificationCode: code
     })
+
+
+    createCookies(res, 201, createUserAccount);
 }
 
 exports.isVerified = async(req, res, next) => {

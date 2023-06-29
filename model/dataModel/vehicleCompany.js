@@ -6,10 +6,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
-        engineType: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
         vehicleType:{
             type: Sequelize.STRING,
             allowNull: false

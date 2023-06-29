@@ -11,7 +11,8 @@ router.get("/view_all_uploads",
 
 router.get("/total_sales", 
     authController.isLoggedIn, 
-    authController.givePermissionTo("admin")
+    authController.givePermissionTo("admin"),
+    dashboardController.viewTotalSales
 );
 
 

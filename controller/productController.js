@@ -27,29 +27,49 @@ const upload = {
 
 
 
-exports.create_product = catchAsync(async (req, res) => {
+exports.create_product = async (req, res) => {
     const imagesName = [];
     req.files.forEach(ele => {
         imagesName.push(ele.filename)
     });
+    console.log(req.body, imagesName)
 
     const created_product = await product.create({
-        name: req.body.name,
-        company: req.body.company, // brand
+        name: req.body.name, 
+        company: req.body.company * 1,
         years: req.body.years,
         price: req.body.price,
         description: req.body.description,
         modal: req.body.modal,
-        images: imagesName,
-        shortDescription: req.body.shortDescription,
+        images: imagesName, 
+        shortDescription: req.body.shortDescription, 
         userId: res.locals.userData.id,
-        category: req.body.category,
-        vehicleCompanyId: 1  
+        engineType: req.body.engineType,
+        vehicleCompanyId: 1,
+        isSold: false,
+        isDeleteByUser: false,
+        isNegotiable: req.body.negotiable,
     })
 
     statusFunc(res, 201, created_product);
-})
+}
 
+exports.checkSold = async(req, res) => {
+    const listedProduct = await product.findOne({
+        where: {
+            id: req.params.id
+        }
+    })
+
+    if(!listedProduct){
+        return statusFunc(res, 404, "item not found");
+    }
+
+    listedProduct.isSold = listedProduct.isSold ? false : true;
+    listedProduct.save();
+
+    statusFunc(res, 200, listedProduct.isSold ? "congrulations! on selling your product" : "ooh! haven't sold yet");
+}
 
 exports.show_products = async (req, res) => {
     const showed_products = await database.products.findAll({
@@ -71,7 +91,8 @@ exports.delete_products = catchAsync(async (req, res) => {
         return statusFunc(res, 404, "cannot find the item you are trying to delete");
     }
 
-    deleteProduct.destroy();
+    deleteProduct.isDeleteByUser = true;
+    deleteProduct.save();
     statusFunc(res, 200, "item delete successfully");
 })
 

@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
         name: {
             type: Sequelize.STRING,
         },
-        company: {
+        company: {   // vehicle manufracturer
             type: Sequelize.INTEGER,
         },
         years: {
@@ -17,10 +17,10 @@ module.exports = (sequelize, Sequelize) => {
         description: {
             type: Sequelize.STRING,
         },
-        category: {
+        engineType: {  // electric / non-electric
             type: Sequelize.STRING
         },
-        modal: {
+        modal: {  // vehicle modal
             type: Sequelize.STRING,
         },
         images: {
@@ -31,6 +31,15 @@ module.exports = (sequelize, Sequelize) => {
         },
         userId: {
             type: Sequelize.INTEGER,
+        },
+        isSold:{
+            type: Sequelize.BOOLEAN
+        },
+        isDeleteByUser:{
+            type: Sequelize.BOOLEAN
+        },
+        isNegotiable:{
+            type: Sequelize.BOOLEAN
         }
     })
 

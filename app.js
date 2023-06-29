@@ -36,9 +36,9 @@ const server = app.listen(port, () => {
     console.log("server is running at port : ", port);
 })
 
-// process.on('unhandledRejection', (err) => {
-//     console.log("unhandeled promise rejection");
-//     server.close(() => {
-//         process.exit(1);
-//     })
-// })
+process.on('unhandledRejection', (err) => {
+    console.log("unhandeled promise rejection");
+    server.close(() => {
+        process.exit(1);
+    })
+})

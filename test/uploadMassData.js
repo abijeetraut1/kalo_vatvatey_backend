@@ -64,7 +64,6 @@ const scooty = database.brands;
 const uploadScooty = async (data, type) => {
     await scooty.create({
         companyName: data.company.toLowerCase(),
-        engineType: data.type.toLowerCase(),
         vehicleType:type
     })
 }
