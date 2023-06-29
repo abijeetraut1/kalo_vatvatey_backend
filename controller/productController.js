@@ -7,6 +7,7 @@ const vehicleCompany = require("../model/dataModel/vehicleCompany");
 const product = database.products;
 const addToCart = database.addToCarts;
 const favourite = database.favourites;
+const statusFunc = require("./../utils/statusFunc");
 
 const multerStorage = multer.memoryStorage();
 
@@ -25,12 +26,6 @@ const upload = {
 }
 
 
-const statusFunc = (res, status, message) => {
-    res.json({
-        status,
-        message
-    })
-}
 
 exports.create_product = catchAsync(async (req, res) => {
     const imagesName = [];
@@ -71,18 +66,26 @@ exports.delete_products = catchAsync(async (req, res) => {
             id: req.params.id
         }
     });
+
+    if(!deleteProduct){
+        return statusFunc(res, 404, "cannot find the item you are trying to delete");
+    }
+
     deleteProduct.destroy();
     statusFunc(res, 200, "item delete successfully");
 })
 
 exports.showone = catchAsync(async (req, res) => {
-    console.log(req.params.id)
     const showone = await product.findOne({
         where: {
             id: req.params.id
         }
     });
-    console.log(showone)
+
+    if(!showone){
+        return statusFunc(res, 404, "cannot find that product");
+    }
+
     statusFunc(res, 200, showone);
 })
 
@@ -101,6 +104,9 @@ exports.update_products = catchAsync(async (req, res) => {
             id: req.params.id
         }
     });
+    if(!update_product){
+        return statusFunc(res, 404, "cannot find the product you are searching");
+    }
     update_product.name = name;
     update_product.brand = brand;
     update_product.years = years;
@@ -108,6 +114,7 @@ exports.update_products = catchAsync(async (req, res) => {
     update_products.price = price;
     update_products.modal = modal;
     update_product.save();
+
     statusFunc(res, 200, update_product);
 })
 

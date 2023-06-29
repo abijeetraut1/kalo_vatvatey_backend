@@ -16,7 +16,14 @@ module.exports = (sequelize, Sequelize) => {
         },
         role: {
             type: Sequelize.STRING,
+        },
+        isVerified: {
+            type: Sequelize.BOOLEAN   
+        },
+        verificationCode:{
+            type: Sequelize.INTEGER
         }
+
     })
 
     return User;

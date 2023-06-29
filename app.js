@@ -9,6 +9,7 @@ const port = 800;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // Routers
 const userRouter = require("./router/userRouter");
 const productRouter = require("./router/productsRouter");
@@ -29,14 +30,15 @@ app.use("/api/v1/products", cors(corsOptions), productRouter);
 app.use("/api/v1/admin", cors(corsOptions), adminRouter);  // -> super admin pannel
 app.use("/vehicles", cors(corsOptions), vehicleRouter);
 
+
 // server 
 const server = app.listen(port, () => {
     console.log("server is running at port : ", port);
 })
 
-process.on('unhandledRejection', (err) => {
-    console.log("unhandeled promise rejection");
-    server.close(() => {
-        process.exit(1);
-    })
-})
+// process.on('unhandledRejection', (err) => {
+//     console.log("unhandeled promise rejection");
+//     server.close(() => {
+//         process.exit(1);
+//     })
+// })

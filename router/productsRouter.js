@@ -18,7 +18,6 @@ router.get("/show_one_product/:id",
 
 router.use(
     authController.isLoggedIn,
-    authController.checkuser
 )
 
 router.post("/create_products",

@@ -61,14 +61,18 @@ const database = require("./../model/index");
 const scooty = database.brands;
 
 
-const uploadScooty = async (data) => {
+const uploadScooty = async (data, type) => {
     await scooty.create({
         companyName: data.company.toLowerCase(),
         engineType: data.type.toLowerCase(),
-        vehicleType:"bike"
+        vehicleType:type
     })
 }
 
-bike_list.forEach(ele => {
-    uploadScooty(ele)
+scooty_list.forEach(ele => {
+    uploadScooty(ele, "scooty");
 });
+
+bike_list.forEach(ele => {
+    uploadScooty(ele, "bike");
+})

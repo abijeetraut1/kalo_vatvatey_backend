@@ -1,6 +1,7 @@
-module.exports = (res, status, message) => {
-    return res.json({
-        status, 
-        message
+module.exports = (res, statusCode, message) => {
+    return res.status(statusCode).json({
+        status: statusCode <= 203 ? "success" : "failed", 
+        length: message.length,
+        message: message
     })
 }

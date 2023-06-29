@@ -5,17 +5,12 @@ require("dotenv").config({
 })
 const bcrypt = require('bcrypt');
 const catchAsync = require("../utils/catchAsync");
+const statusFunc = require("../utils/statusFunc");
+const sendMail = require("../utils/sendMail");
 
 
 // deconstruction
 const user = database.users;
-
-const statusFunc = (res, statusCode, message) => {
-    res.status(statusCode).json({
-        status: statusCode <= 203 ? "success" : "failed", 
-        message: message
-    })
-}
 
 const createCookies = (res, status, userSignin) => {
     const token = jwt_signin(userSignin.id);
@@ -29,7 +24,7 @@ const createCookies = (res, status, userSignin) => {
         httpOnly: true,
         secure: false
     });
-    statusFunc(res, 200, token);
+    statusFunc(res, 201, token);
 }
 
 const jwt_signin = (id) => {
@@ -43,23 +38,37 @@ const jwt_signin = (id) => {
 
 // SIGNUP
 exports.signup = async (req, res) => {
-    const checkAlreadyLogin = await user.findOne({
-        where: {
-            email: req.body.email
-        }
-    })
+    // const checkAlreadyLogin = await user.findOne({
+    //     where: {
+    //         email: req.body.email
+    //     }
+    // })
 
-    if (checkAlreadyLogin) {
-        return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
-    }
-    const createUserAccount = await user.create({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: await bcrypt.hash(req.body.password, 12),
-        role: req.body.role ? "admin" : "user",
+    // if (checkAlreadyLogin) {
+    //     return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
+    // }
+    
+    const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
+
+    // const createUserAccount = await user.create({
+    //     firstName: req.body.firstName,
+    //     lastName: req.body.lastName,
+    //     email: req.body.email,
+    //     password: await bcrypt.hash(req.body.password, 12),
+    //     role: req.body.role ? "admin" : "user",
+    //     isVerified: false,
+    //     verificationCode: code
+    // })
+    // send mail
+    sendMail(req.body.email, code);
+    // createCookies(res, 201, "createUserAccount");
+    res.json({
+        message: "success"
     })
-    createCookies(res, 201, createUserAccount);
+}
+
+exports.isVerified = async(req, res, next) => {
+    
 }
 
 
@@ -72,7 +81,7 @@ exports.login = async (req, res) => {
     })
 
     if (userSignin === null) {
-        statusFunc(res, 404, "user not found! PEASE CREATE AN ACCOUNT");
+        return statusFunc(res, 404, "user not found! PEASE CREATE AN ACCOUNT");
     }
 
     if (await bcrypt.compare(req.body.password, userSignin.password)) {
@@ -98,8 +107,9 @@ exports.forgetPassword = async (req, res, next) => {
     }, process.env.JWT_SECRET, {
         expiresIn: process.env.FORGET_PASSWORD_EXPIRES_AT
     })
-    statusFunc(res, 200, token);
+    statusFunc(res, 201, token);
 }
+
 
 
 // RESET PASSWORD   
@@ -139,13 +149,13 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 // check user is logged in or not
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
     if(!req.headers.token){
-        return statusFunc(res, 404, "please login")
+        return statusFunc(res, 403, "please login")
     }
 
     const jwtDecode = jwt.verify(req.headers.token, process.env.JWT_SECRET);
     
     if (jwtDecode.iat > jwtDecode.exp) {
-        return statusFunc(res, 200, "expired cookie");
+        return statusFunc(res, 400, "expired cookie");
     }
     
     const findUser = await user.findOne({
@@ -158,12 +168,6 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
     });
     
     res.locals.userData = findUser;
-    next();
-})
-
-exports.checkuser = catchAsync(async (req, res, next) => {
-    // console.log(res.locals.userData)
-    // statusFunc(res, 200, "found");
     next();
 })
 
