@@ -73,8 +73,8 @@ exports.checkSold = async(req, res) => {
 
 exports.show_products = async (req, res) => {
     const showed_products = await database.products.findAll({
-        attributes: {
-            exclude: ["name"]
+        where: {
+            isDeleteByUser: false
         }
     });
     statusFunc(res, 200, showed_products);
