@@ -15,6 +15,17 @@ router.get("/total_sales",
     dashboardController.viewTotalSales
 );
 
+router.get("/engine_dependson", 
+    authController.isLoggedIn, 
+    authController.givePermissionTo("admin"),
+    dashboardController.engineRunsOn
+)
+
+router.post("/upload_engine_dependson", 
+    authController.isLoggedIn, 
+    authController.givePermissionTo("admin"),
+    dashboardController.uploadEngineRunsOn
+)
 
 module.exports = router;
 

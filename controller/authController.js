@@ -6,6 +6,7 @@ require("dotenv").config({
 const bcrypt = require('bcrypt');
 const catchAsync = require("../utils/catchAsync");
 const statusFunc = require("../utils/statusFunc");
+const sendMail = require("../utils/sendMail");
 
 // deconstruction
 const user = database.users;
@@ -58,12 +59,28 @@ exports.signup = async (req, res) => {
         verificationCode: code
     })
 
+    const link = "/"
+
+    // sendmail
+    sendMail(req.body.email, code);
 
     createCookies(res, 201, createUserAccount);
 }
 
-exports.isVerified = async(req, res, next) => {
-    
+exports.checkVerificationCode = async(req, res, next) => {
+    if(req.body.verificationCode){
+        const verifiedUser = await user.findOne({
+            where:{
+                id: res.locals.userData.id
+            }
+        });
+
+        if(verifiedUser.verificationCode === req.body.verificationCode){
+            return statusFunc(res, 200, "account verifined");
+        }else{
+            return statusFunc(res, 200, "wrong verifincation code");
+        }
+    }
 }
 
 
