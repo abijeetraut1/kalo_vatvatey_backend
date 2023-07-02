@@ -5,6 +5,7 @@ const userController = require("../controller/authController");
 router.post("/signup", userController.signup);
 router.post("/login", userController.login);
 router.post("/verification", userController.checkVerificationCode);
+router.get("/verification/:verificationJWT", userController.checkVerificationLink);
 router.post('/forgetPassword', userController.forgetPassword);
 router.post("/resetPassword/:token", userController.resetPassword);
 router.patch("/update_password/:id", userController.updatePassword);

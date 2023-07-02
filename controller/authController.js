@@ -90,7 +90,14 @@ exports.checkVerificationCode = async (req, res, next) => {
 
 exports.checkVerificationLink = async(req, res) => {
     if(req.params.verificationJWT){
-        const decode = jwt.verify()
+        const decode = jwt.verify(req.params.verificationJWT, process.env.JWT_VERIFICATION_SECRET);
+        const findUser = await decode.findOne({where: {id: decode.id}});
+        if(findUser.verificationCode === decode.verificationCode){
+            finduser.isVerified = true;
+            findUser.save();
+            statusFunc(res, 200, "user verified");
+        }
+        statusFunc(res, 200, "token expired")
     }
 }
 

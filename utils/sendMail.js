@@ -16,10 +16,10 @@ module.exports = async (sendTo, code, verificatonLink) => {
             to: sendTo,
             subject: "Kalo Bhatbhate",
             html: `
-                <h1>your verification code is ${code}</h1>
+                <h1>your verification code is <span color="red">${code} </span></h1>
                 <br> or <br>
                 <h1> you can just click on the link below </h1>
-                <p> http://127.0.0.1:800/api/v1/user/verifyaccount/${verificatonLink} </p>
+                <p color="blue"> http://127.0.0.1:800/api/v1/user/verification/${verificatonLink} </p>
                 `
         })
         console.log("verification code send");
