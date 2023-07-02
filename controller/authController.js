@@ -46,7 +46,7 @@ exports.signup = async (req, res) => {
     if (checkAlreadyLogin) {
         return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
     }
-    
+
     const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
     const createUserAccount = await user.create({
         firstName: req.body.firstName,
@@ -58,28 +58,39 @@ exports.signup = async (req, res) => {
         isVerified: false,
         verificationCode: code
     })
-
-    const link = "/"
+    const id = createUserAccount.id;
+    const verificatonLink = jwt.sign({
+        id,
+        verificationCode
+    }, process.env.JWT_VERIFICATION_SECRET, {
+        expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
+    })
 
     // sendmail
-    sendMail(req.body.email, code);
+    sendMail(req.body.email, code, verificatonLink);
 
     createCookies(res, 201, createUserAccount);
 }
 
-exports.checkVerificationCode = async(req, res, next) => {
-    if(req.body.verificationCode){
+exports.checkVerificationCode = async (req, res, next) => {
+    if (req.body.verificationCode) {
         const verifiedUser = await user.findOne({
-            where:{
+            where: {
                 id: res.locals.userData.id
             }
         });
 
-        if(verifiedUser.verificationCode === req.body.verificationCode){
+        if (verifiedUser.verificationCode === req.body.verificationCode) {
             return statusFunc(res, 200, "account verifined");
-        }else{
+        } else {
             return statusFunc(res, 200, "wrong verifincation code");
         }
+    }
+}
+
+exports.checkVerificationLink = async(req, res) => {
+    if(req.params.verificationJWT){
+        const decode = jwt.verify()
     }
 }
 
@@ -160,16 +171,16 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
 // check user is logged in or not
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
-    if(!req.headers.token){
+    if (!req.headers.token) {
         return statusFunc(res, 403, "please login")
     }
 
     const jwtDecode = jwt.verify(req.headers.token, process.env.JWT_SECRET);
-    
+
     if (jwtDecode.iat > jwtDecode.exp) {
         return statusFunc(res, 400, "expired cookie");
     }
-    
+
     const findUser = await user.findOne({
         where: {
             id: jwtDecode.id
@@ -178,14 +189,14 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
             exclude: ["password", "refreshToken"]
         }
     });
-    
+
     res.locals.userData = findUser;
     next();
 })
 
 exports.givePermissionTo = (...roles) => {
     return (req, res, next) => {
-        if(!roles.includes(res.locals.userData.role)){
+        if (!roles.includes(res.locals.userData.role)) {
             return statusFunc(res, 403, "you doesnot have permission to perform this action");
         }
         return next();

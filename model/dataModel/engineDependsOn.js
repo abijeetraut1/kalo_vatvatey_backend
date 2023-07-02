@@ -1,12 +1,12 @@
 const database = require("../index");
 
 module.exports = (sequelize, Sequelize) => {
-    const engineDependsOn = sequelize.define("engineDepedsOn", {
+    const engineDepends = sequelize.define("engineDepedsOn", {
         vehicleRunsOn: {
             type: Sequelize.STRING,
         }
     })
-    return engineDependsOn;
+    return engineDepends;
 }
 
 // upload garako vehicle ma kun or k halera vehicle run hunxa

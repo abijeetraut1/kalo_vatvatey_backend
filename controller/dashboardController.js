@@ -2,6 +2,7 @@ const statusFunc = require("../utils/statusFunc");
 
 const database = require("../model/index");
 const products = database.products;
+const engineDependsOn = database.engineDependsOn;
 // const 
 
 exports.viewUploads = async (req, res) => {
@@ -19,7 +20,7 @@ exports.viewUploads = async (req, res) => {
     });
 
     uploadData.forEach(el => {
-        price+=el.price * 1;
+        price += el.price * 1;
     })
     res.status(200).json({
         status: "success",
@@ -28,7 +29,7 @@ exports.viewUploads = async (req, res) => {
     })
 }
 
-exports.viewTotalSales = async(req, res) => {
+exports.viewTotalSales = async (req, res) => {
     let price = 0;
     const viewSalesData = await products.findAll({
         where: {
@@ -55,12 +56,30 @@ exports.viewTotalSales = async(req, res) => {
     })
 }
 
-exports.engineRunsOn = async(req, res) => {
-    
+exports.engineRunsOn = async (req, res) => {
+    const engine = await engineDependsOn.findAll({});
+    if (!engine) {
+        return statusFunc(res, 404, "admin hasn't upload any");
+    }
+    statusFunc(res, 200, engine);
 }
 
-exports.uploadEngineRunsOn = async(req, res) => {
-    
+exports.uploadEngineRunsOn = async (req, res) => {
+    const alreadyUploaded = await engineDependsOn.findOne({
+        where: {
+            vehicleRunsOn: req.body.runsOn
+        }
+    })
+
+    if(alreadyUploaded){
+        return statusFunc(res, 400, "already uploaded");
+    }
+
+    await engineDependsOn.create({
+        vehicleRunsOn: req.body.runsOn
+    })
+
+    statusFunc(res, 200, `uploaded engine ${req.body.vehicleRunsOn}`);
 }
 
 // admin can upload, see the request in which type does vehicle runs
