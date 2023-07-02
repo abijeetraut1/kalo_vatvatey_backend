@@ -23,7 +23,10 @@ const createCookies = (res, status, userSignin) => {
         httpOnly: true,
         secure: false
     });
-    statusFunc(res, 201, token);
+    statusFunc(res, 201, {
+        message: `verification code was send to ${userSignin.email}`,
+        token
+    });
 }
 
 const jwt_signin = (id) => {
@@ -61,7 +64,7 @@ exports.signup = async (req, res) => {
     const id = createUserAccount.id;
     const verificatonLink = jwt.sign({
         id,
-        verificationCode
+        code
     }, process.env.JWT_VERIFICATION_SECRET, {
         expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
     })
@@ -74,13 +77,16 @@ exports.signup = async (req, res) => {
 
 exports.checkVerificationCode = async (req, res, next) => {
     if (req.body.verificationCode) {
-        const verifiedUser = await user.findOne({
+        const findUser = await user.findOne({
             where: {
                 id: res.locals.userData.id
             }
         });
 
-        if (verifiedUser.verificationCode === req.body.verificationCode) {
+        if (findUser.verificationCode === req.body.verificationCode) {
+            findUser.isVerified = 1 || true;
+            findUser.verificationCode = undefined;
+            findUser.save(); 
             return statusFunc(res, 200, "account verifined");
         } else {
             return statusFunc(res, 200, "wrong verifincation code");
@@ -88,16 +94,28 @@ exports.checkVerificationCode = async (req, res, next) => {
     }
 }
 
-exports.checkVerificationLink = async(req, res) => {
-    if(req.params.verificationJWT){
-        const decode = jwt.verify(req.params.verificationJWT, process.env.JWT_VERIFICATION_SECRET);
-        const findUser = await decode.findOne({where: {id: decode.id}});
-        if(findUser.verificationCode === decode.verificationCode){
-            finduser.isVerified = true;
-            findUser.save();
-            statusFunc(res, 200, "user verified");
+exports.checkVerificationLink = async (req, res) => {
+    if (req.params.verificationJWT) {
+        let decode;
+        try {
+            decode = jwt.verify(req.params.verificationJWT, process.env.JWT_VERIFICATION_SECRET);
+        } catch (err) {
+            return statusFunc(res, 400, "verification token expired");
+        };
+        const findUser = await user.findOne({
+            where: {
+                id: decode.id
+            }
+        });
+
+        if (!findUser) {
+            return statusFunc(res, 400, "cannot find user");
         }
-        statusFunc(res, 200, "token expired")
+        if (findUser.verificationCode === decode.code) {
+            findUser.isVerified = 1 || true;
+            findUser.save();
+        }
+        statusFunc(res, 200, "verified user")
     }
 }
 
