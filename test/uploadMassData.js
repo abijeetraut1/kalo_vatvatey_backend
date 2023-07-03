@@ -57,9 +57,10 @@ const bike_list = [
 ]
 
 
+// const engineDependsOn = require("../model/dataModel/engineDependsOn");
 const database = require("./../model/index");
 const scooty = database.brands;
-
+const engineDepends = database.engineDependsUpon;
 
 const uploadScooty = async (data, type) => {
     await scooty.create({
@@ -67,6 +68,14 @@ const uploadScooty = async (data, type) => {
         vehicleType:type
     })
 }
+
+const engineDependsOn = async(item) => {
+    await engineDepends.create({
+        vehicleRunsOn: item
+    })
+}
+
+
 
 scooty_list.forEach(ele => {
     uploadScooty(ele, "scooty");
@@ -76,6 +85,9 @@ bike_list.forEach(ele => {
     uploadScooty(ele, "bike");
 })
 
-
+const list = ["diesel", "electric power", "biofuels", "hydrogen", "petrol"];
+list.forEach(el => {
+    engineDependsOn(el)
+})
 
 // send code

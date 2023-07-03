@@ -215,15 +215,21 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
         }
     });
 
+    if(findUser === null){
+        return statusFunc(res, 400, "relogin");
+    }
+    
     res.locals.userData = findUser;
     next();
 })
 
 exports.givePermissionTo = (...roles) => {
+
     return (req, res, next) => {
         if (!roles.includes(res.locals.userData.role)) {
             return statusFunc(res, 403, "you doesnot have permission to perform this action");
         }
         return next();
     }
+
 }

@@ -1,7 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const process = require("node:process");
 
 const app = express();
 const port = 8080;
@@ -39,10 +38,3 @@ app.use("/vehicles", cors(corsOptions), vehicleRouter);
 const server = app.listen(port, () => {
     console.log("server is running at port : ", port);
 })
-
-// process.on('unhandledRejection', (err) => {
-//     console.log("unhandeled promise rejection");
-//     server.close(() => {
-//         process.exit(1);
-//     })
-// })

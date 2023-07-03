@@ -4,8 +4,8 @@ const statusFunc = require("./statusFunc");
 const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-        user: "bebishnewar@gmail.com",
-        pass: "qszjvbtkyhvlkloo"
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
     }
 })
 

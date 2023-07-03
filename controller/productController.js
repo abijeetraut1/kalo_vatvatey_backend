@@ -33,24 +33,25 @@ exports.create_product = async (req, res) => {
         imagesName.push(ele.filename)
     });
 
+    console.log(req.body.year)
     const created_product = await product.create({
-        name: req.body.name, 
+        name: req.body.name,
         company: req.body.company * 1,
-        boughtYears: req.body.boughtYear,
+        boughtYear: req.body.year,
         price: req.body.price,
         description: req.body.description,
         modal: req.body.modal,
-        images: imagesName, 
-        shortDescription: req.body.shortDescription, 
+        images: imagesName,
+        shortDescription: req.body.shortDescription,
         userId: res.locals.userData.id,
-        engineType: req.body.engineType,
         vehicleCompanyId: 1,
         color: req.body.color,
         kmDriven: req.body.kmDriven,
-        ownderShip: req.body.owndership,
+        ownerShip: req.body.ownership,
         engineDisplacement: req.body.engineDisplacement,
         milage: req.body.milage,
         wheelSize: req.body.wheelsize,
+        engineDepedsOnId: 1,
         isSold: false,
         isDeleteByUser: false,
         isNegotiable: req.body.negotiable,
@@ -59,14 +60,14 @@ exports.create_product = async (req, res) => {
     statusFunc(res, 201, created_product);
 }
 
-exports.checkSold = async(req, res) => {
+exports.checkSold = async (req, res) => {
     const listedProduct = await product.findOne({
         where: {
             id: req.params.id
         }
     })
 
-    if(!listedProduct){
+    if (!listedProduct) {
         return statusFunc(res, 404, "item not found");
     }
 
@@ -92,7 +93,7 @@ exports.delete_products = catchAsync(async (req, res) => {
         }
     });
 
-    if(!deleteProduct){
+    if (!deleteProduct) {
         return statusFunc(res, 404, "cannot find the item you are trying to delete");
     }
 
@@ -108,7 +109,7 @@ exports.showone = catchAsync(async (req, res) => {
         }
     });
 
-    if(!showone){
+    if (!showone) {
         return statusFunc(res, 404, "cannot find that product");
     }
 
@@ -130,7 +131,7 @@ exports.update_products = catchAsync(async (req, res) => {
             id: req.params.id
         }
     });
-    if(!update_product){
+    if (!update_product) {
         return statusFunc(res, 404, "cannot find the product you are searching");
     }
     update_product.name = name;

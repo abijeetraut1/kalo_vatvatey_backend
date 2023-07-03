@@ -9,16 +9,13 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
         },
         boughtYear: {
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
         },
         price: {
             type: Sequelize.INTEGER,
         },
         description: {
             type: Sequelize.STRING,
-        },
-        engineType: {  // electric / non-electric
-            type: Sequelize.STRING
         },
         modal: {  // vehicle modal
             type: Sequelize.STRING,
@@ -50,6 +47,7 @@ module.exports = (sequelize, Sequelize) => {
         wheelSize: {
             type: Sequelize.INTEGER,
         },
+        
         isSold:{
             type: Sequelize.BOOLEAN
         },
