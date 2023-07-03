@@ -39,7 +39,7 @@ const jwt_signin = (id) => {
 
 
 // SIGNUP
-exports.signup = async (req, res) => {
+exports.signup = catchAsync(async (req, res) => {
     const checkAlreadyLogin = await user.findOne({
         where: {
             email: req.body.email
@@ -73,9 +73,9 @@ exports.signup = async (req, res) => {
     sendMail(req.body.email, code, verificatonLink, req.body.name);
 
     createCookies(res, 201, createUserAccount);
-}
+})
 
-exports.checkVerificationCode = async (req, res, next) => {
+exports.checkVerificationCode = catchAsync(async (req, res, next) => {
     if (req.body.verificationCode) {
         const findUser = await user.findOne({
             where: {
@@ -86,15 +86,15 @@ exports.checkVerificationCode = async (req, res, next) => {
         if (findUser.verificationCode === req.body.verificationCode) {
             findUser.isVerified = 1 || true;
             findUser.verificationCode = undefined;
-            findUser.save(); 
+            findUser.save();
             return statusFunc(res, 200, "account verifined");
         } else {
             return statusFunc(res, 200, "wrong verifincation code");
         }
     }
-}
+})
 
-exports.checkVerificationLink = async (req, res) => {
+exports.checkVerificationLink = catchAsync(async (req, res) => {
     if (req.params.verificationJWT) {
         let decode;
         try {
@@ -117,11 +117,11 @@ exports.checkVerificationLink = async (req, res) => {
         }
         statusFunc(res, 200, "verified user")
     }
-}
+})
 
 
 // LOGIN
-exports.login = async (req, res) => {
+exports.login = catchAsync(async (req, res) => {
     const userSignin = await user.findOne({
         where: {
             email: req.body.email
@@ -136,11 +136,11 @@ exports.login = async (req, res) => {
         // userSignin.refreshToken = jwt.sign(userSignin, );
         createCookies(res, 200, userSignin);
     }
-}
+})
 
 
 // FORGET PASSWORD
-exports.forgetPassword = async (req, res, next) => {
+exports.forgetPassword = catchAsync(async (req, res, next) => {
     const findingUser = await user.findOne({
         email: req.body.email
     })
@@ -156,12 +156,12 @@ exports.forgetPassword = async (req, res, next) => {
         expiresIn: process.env.FORGET_PASSWORD_EXPIRES_AT
     })
     statusFunc(res, 201, token);
-}
+})
 
 
 
 // RESET PASSWORD   
-exports.resetPassword = async (req, res, next) => {
+exports.resetPassword = catchAsync(async (req, res, next) => {
     try { // error handeling
         console.log(req.params.token)
         const forgetPSWuserId = jwt.verify(req.params.token, process.env.JWT_SECRET).id;
@@ -175,7 +175,7 @@ exports.resetPassword = async (req, res, next) => {
     } catch (err) {
         statusFunc(res, 200, `error: ${err.message}`);
     }
-}
+})
 
 
 // update password
