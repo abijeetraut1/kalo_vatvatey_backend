@@ -70,7 +70,7 @@ exports.signup = async (req, res) => {
     })
 
     // sendmail
-    sendMail(req.body.email, code, verificatonLink);
+    sendMail(req.body.email, code, verificatonLink, req.body.name);
 
     createCookies(res, 201, createUserAccount);
 }

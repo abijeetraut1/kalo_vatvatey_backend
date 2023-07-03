@@ -1,13 +1,17 @@
 const DBconfig = require("./../config/config");
 
-const {Sequelize, DataTypes} = require("sequelize");
+const {
+    Sequelize,
+    DataTypes
+} = require("sequelize");
 
-const sequelize = new Sequelize(DBconfig.db, DBconfig.USER, DBconfig.PASS,{
+const sequelize = new Sequelize(DBconfig.db, DBconfig.USER, DBconfig.PASS, {
     host: DBconfig.HOST,
     dialect: DBconfig.dialect,
     operatirAlias: false,
     loggin: false,
-    pool:{
+    port: DBconfig.POST, 
+    pool: {
         max: DBconfig.max,
         min: DBconfig.min,
         accurate: DBconfig.accurate,
@@ -35,7 +39,7 @@ db.engineDepends = require("./dataModel/engineDependsOn")(sequelize, DataTypes);
 
 // relation reviews
 db.users.hasMany(db.reviews);
-db.reviews.belongsTo(db.users );
+db.reviews.belongsTo(db.users);
 
 // relation uploads product
 db.users.hasMany(db.products);
@@ -62,5 +66,6 @@ db.sequelize.sync({
 }).then(() => {
     console.log("yes! sync done");
 })
+
 
 module.exports = db;

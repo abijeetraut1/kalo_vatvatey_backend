@@ -4,7 +4,7 @@ const cors = require("cors");
 const process = require("node:process");
 
 const app = express();
-const port = 800;
+const port = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

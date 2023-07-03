@@ -32,12 +32,11 @@ exports.create_product = async (req, res) => {
     req.files.forEach(ele => {
         imagesName.push(ele.filename)
     });
-    console.log(req.body, imagesName)
 
     const created_product = await product.create({
         name: req.body.name, 
         company: req.body.company * 1,
-        years: req.body.years,
+        boughtYears: req.body.boughtYear,
         price: req.body.price,
         description: req.body.description,
         modal: req.body.modal,
@@ -46,6 +45,12 @@ exports.create_product = async (req, res) => {
         userId: res.locals.userData.id,
         engineType: req.body.engineType,
         vehicleCompanyId: 1,
+        color: req.body.color,
+        kmDriven: req.body.kmDriven,
+        ownderShip: req.body.owndership,
+        engineDisplacement: req.body.engineDisplacement,
+        milage: req.body.milage,
+        wheelSize: req.body.wheelsize,
         isSold: false,
         isDeleteByUser: false,
         isNegotiable: req.body.negotiable,

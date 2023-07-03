@@ -9,6 +9,7 @@ const {
     multer,
     storage
 } = require("./../servces/multer");
+
 const upload = multer({
     storage: storage
 });
@@ -50,34 +51,47 @@ router.delete("/delete_product/:id",
 
 // review
 router.post("/:id/review",
+    authController.isLoggedIn,
+    authController.givePermissionTo("user"),
     reviewController.review_upload
 );
 
 router.delete("/:id/review/delete",
+    authController.isLoggedIn,
+    authController.givePermissionTo("user"),
     reviewController.deleteReview
 );
 
 router.patch("/:id/review/update",
+    authController.isLoggedIn,
+    authController.givePermissionTo("user"),
     reviewController.updateReview
 );
 
 
 // add to cart
 router.post("/addtocart/:productId",
+    authController.isLoggedIn,
+    authController.givePermissionTo("user"),
     productController.addToCart
 );
 
 
 // add to favourite 
 router.post("/favourite/:productId",
+    authController.isLoggedIn,
+    authController.givePermissionTo("user"),
     productController.AddToFavourites
 )
 
 
 // dashboard / tracker seller
 router.get("/dashboard/uploads",
+    authController.isLoggedIn,
+    authController.givePermissionTo("seller"),
     dashboardController.viewUploads
 );
+
 
 
 module.exports = router;

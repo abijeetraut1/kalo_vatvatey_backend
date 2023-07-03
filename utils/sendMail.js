@@ -9,21 +9,20 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-module.exports = async (sendTo, code, verificatonLink) => {
-    try{
+module.exports = async (sendTo, code, verificatonLink, name) => {
+    try {
         const send = await transporter.sendMail({
             form: "monjir0 <bebishnewar@gmail.com>",
             to: sendTo,
             subject: "Kalo Bhatbhate",
             html: `
-                <h1>your verification code is <span color="red">${code} </span></h1>
-                <br> or <br>
-                <h1> you can just click on the link below </h1>
-                <p color="blue"> http://127.0.0.1:800/api/v1/user/verification/${verificatonLink} </p>
-                `
+                <h1 style="">Thanks For Signup ${name}</h1>
+                <p> you can just click on the link below </p>
+                <a href="http://127.0.0.1:800/api/v1/user/verification/${verificatonLink}"><button>Click Here to Verify</button>
+            `
         })
         console.log("verification code send");
-    }catch(err){
+    } catch (err) {
         return statusFunc(req, 400, "too many request please try again later");
-    }   
+    }
 }

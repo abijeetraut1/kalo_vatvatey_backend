@@ -5,6 +5,7 @@ var storage = multer.diskStorage({
     cb(null, `./uploads`);
   },
   filename: function (req, file, cb) {
+    console.log(req.body.name)
     image = Date.now() + "-" + req.body.name.replaceAll(" ", "-") + `.png`;
     cb(null, image);
   },

@@ -8,11 +8,11 @@ module.exports = (sequelize, Sequelize) => {
         company: {   // vehicle manufracturer
             type: Sequelize.INTEGER,
         },
-        years: {
+        boughtYear: {
             type: Sequelize.STRING,
         },
         price: {
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
         },
         description: {
             type: Sequelize.STRING,
@@ -26,10 +26,28 @@ module.exports = (sequelize, Sequelize) => {
         images: {
             type: Sequelize.JSON,
         },
+        color:{
+            type: Sequelize.STRING,
+        },
         shortDescription: {
             type: Sequelize.STRING,
         },
         userId: {
+            type: Sequelize.INTEGER,
+        },
+        kmDriven:{
+            type: Sequelize.INTEGER,
+        },
+        ownerShip:{
+            type: Sequelize.INTEGER
+        },
+        engineDisplacement: {
+            type: Sequelize.INTEGER
+        },
+        milage: {
+            type: Sequelize.STRING
+        },
+        wheelSize: {
             type: Sequelize.INTEGER,
         },
         isSold:{
@@ -45,19 +63,3 @@ module.exports = (sequelize, Sequelize) => {
 
     return Product;
 }
-
-// foregin id ko lagi schema ma banai rakhnu pardaina
-
-// ITEMS TO BE ADDED 
-// 1. CATEGORY
-// 2. BRAND SHOULD BE ID
-// 2. 
-
-// category
-// EV
-// SPORTS
-// CLASSIC 
-// ADVENTURE
-// SCOOTERS
-// OFFROAD
-// SUPERMOTO
