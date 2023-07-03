@@ -18,11 +18,16 @@ const vehicleRouter = require("./router/vehicleFillupRoute");
 
 
 const corsOptions = {
-    origin: "http://localhost:3000",
+    origin: "*",
     optionsSuccessStatus: 200
+
 }
 
 app.use(cookieParser());
+
+app.get("/",(req,res)=>{
+    res.send("FRom helo page")
+})
 
 // page gateway
 app.use("/api/v1/user", cors(corsOptions), userRouter);

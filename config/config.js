@@ -15,16 +15,18 @@
 //     }
 // }
 
-module.exports = {
-    HOST: "containers-us-west-117.railway.app",
-    USER:"root",
-    PASS:"pVQeT8xkPDPuPz215c7Z",
-    POST: 7527,
+require("dotenv").config()
+
+module.exports = { 
+    HOST: process.env.DB_HOST,
+    USER: process.env.DB_USER,
+    PASS: process.env.DB_PASS,
+    POST: process.env.DB_PORT,
 
     // database identification
-    db: "railway",
+    db: process.env.DB_COLLECTION,
     dialect: "mysql",
-    pool:{
+    pool: {
         max: 5,
         min: 0,
         accurate: 30000,
