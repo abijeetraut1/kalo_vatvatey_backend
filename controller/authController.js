@@ -57,7 +57,7 @@ exports.signup = catchAsync(async (req, res) => {
         email: req.body.email,
         contact: req.body.phoneno,
         password: await bcrypt.hash(req.body.password, 12),
-        role: req.body.role ? "admin" : "user",
+        role: "user",
         isVerified: false,
         verificationCode: code
     })
@@ -224,12 +224,10 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
 })
 
 exports.givePermissionTo = (...roles) => {
-
     return (req, res, next) => {
         if (!roles.includes(res.locals.userData.role)) {
             return statusFunc(res, 403, "you doesnot have permission to perform this action");
         }
         return next();
     }
-
 }

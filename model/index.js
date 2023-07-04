@@ -1,4 +1,5 @@
 const DBconfig = require("./../config/config");
+const bcrypt = require("bcrypt");
 
 const {
     Sequelize,
@@ -10,7 +11,7 @@ const sequelize = new Sequelize(DBconfig.db, DBconfig.USER, DBconfig.PASS, {
     dialect: DBconfig.dialect,
     operatirAlias: false,
     loggin: false,
-    port: DBconfig.POST, 
+    port: DBconfig.POST,
     pool: {
         max: DBconfig.max,
         min: DBconfig.min,
@@ -63,8 +64,27 @@ db.products.belongsTo(db.engineDependsUpon);
 
 db.sequelize.sync({
     force: false
-}).then(() => {
+}).then(async () => {
     console.log("yes! sync done");
+    await db.users.findOrCreate({
+        where: {
+            email: 'kalobhatbhateadmin010@admin.com'
+        },
+        defaults: {
+            firstName: 'page',
+            lastName: 'admin',
+            role: 'admin',
+            contact: 9800000000,
+            isVerified: true,
+            verificationCode: 123456,
+            email: 'kalobhatbhateadmin010@admin.com',
+            password: await bcrypt.hash('k@10bh@tbh@t3Adm1n', 12)
+        }
+    }).then(() => {
+        console.log("Admin Successfully seeded");
+    }).catch(err => {
+        return console.log(" error " + err);
+    })
 })
 
 

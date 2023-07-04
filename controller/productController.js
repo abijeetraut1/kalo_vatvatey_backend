@@ -1,6 +1,9 @@
 const multer = require("multer");
 const process = require("node:process");
-
+const {
+    Op,
+    INTEGER
+} = require("sequelize");
 const catchAsync = require('../utils/catchAsync');
 const database = require('./../model/index');
 const vehicleCompany = require("../model/dataModel/vehicleCompany");
@@ -80,6 +83,20 @@ exports.checkSold = async (req, res) => {
 exports.show_products = async (req, res) => {
     const showed_products = await database.products.findAll({
         where: {
+            isDeleteByUser: false
+        }
+    });
+    statusFunc(res, 200, showed_products);
+}
+
+exports.show_filter_product = async (req, res) => {
+    const showed_products = await database.products.findAll({
+        where: {
+            price: {
+                [Op.between]: [req.params.min, req.params.max]
+            },
+            color: req.params.color,
+            vehicleCompany: req.params.company,
             isDeleteByUser: false
         }
     });

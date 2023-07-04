@@ -18,6 +18,10 @@ router.get("/show_products",
     productController.show_products
 );
 
+router.get("/show_product/:min/:max/:color/:company",
+    productController.show_filter_product
+);
+
 router.get("/show_one_product/:id",
     productController.showone
 );
