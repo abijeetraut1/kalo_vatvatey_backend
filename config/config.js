@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-if (process.env.enviroment === "development") {
+if (process.env.ENVIROMENT == "development") {
     console.log("running on development");
     module.exports = {
         HOST: "localhost",
