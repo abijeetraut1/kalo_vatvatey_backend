@@ -1,0 +1,3 @@
+/show_products         =   to display product
+/delete_product/:id    =   to delete one product
+/review_upload
