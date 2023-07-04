@@ -1,6 +1,7 @@
 const statusFunc = require("../utils/statusFunc");
 
 const database = require("../model/index");
+const catchAsync = require("../utils/catchAsync");
 const products = database.products;
 const engineDependsOn = database.engineDependsOn;
 // const 
@@ -29,7 +30,7 @@ exports.viewUploads = async (req, res) => {
     })
 }
 
-exports.viewTotalSales = async (req, res) => {
+exports.viewTotalSales = catchAsync(async(req, res) => {
     let price = 0;
     const viewSalesData = await products.findAll({
         where: {
@@ -54,17 +55,17 @@ exports.viewTotalSales = async (req, res) => {
         totalSoldProduct: price,
         viewSalesData
     })
-}
+})
 
-exports.engineRunsOn = async (req, res) => {
+exports.engineRunsOn = catchAsync(async (req, res) => {
     const engine = await engineDependsOn.findAll({});
     if (!engine) {
         return statusFunc(res, 404, "admin hasn't upload any");
     }
     statusFunc(res, 200, engine);
-}
+})
 
-exports.uploadEngineRunsOn = async (req, res) => {
+exports.uploadEngineRunsOn = catchAsync(async (req, res) => {
     const alreadyUploaded = await engineDependsOn.findOne({
         where: {
             vehicleRunsOn: req.body.runsOn
@@ -80,6 +81,6 @@ exports.uploadEngineRunsOn = async (req, res) => {
     })
 
     statusFunc(res, 200, `uploaded engine ${req.body.vehicleRunsOn}`);
-}
+})
 
 // admin can upload, see the request in which type does vehicle runs

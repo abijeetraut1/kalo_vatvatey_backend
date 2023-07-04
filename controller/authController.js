@@ -37,9 +37,32 @@ const jwt_signin = (id) => {
     })
 }
 
+const DetectEmptyForm = (res, field) => {
+    return statusFunc(res, 400, `${field} Is Empty`);
+}
 
 // SIGNUP
 exports.signup = catchAsync(async (req, res) => {
+    const {
+        firstName,
+        lastName,
+        email,
+        phoneno,
+        password
+    } = req.body;
+
+    if (!firstName)
+        return DetectEmptyForm(res, "firstName");
+    else if (!lastName)
+        return DetectEmptyForm(res, "lastName");
+    else if (!email)
+        return DetectEmptyForm(res, "Email");
+    else if (!phoneno)
+        return DetectEmptyForm(res, "phoneno");
+    else if (!password)
+        return DetectEmptyForm(res, "password");
+
+
     const checkAlreadyLogin = await user.findOne({
         where: {
             email: req.body.email
@@ -215,11 +238,41 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
         }
     });
 
-    if(findUser === null){
+    if (findUser === null) {
         return statusFunc(res, 400, "relogin");
     }
-    
+
     res.locals.userData = findUser;
+    next();
+});
+
+// change role
+exports.changeRole = catchAsync(async (req, res) => {
+    const userTochangeRole = await user.findOne({
+        where: {
+            id: res.locals.userData.id
+        }
+    })
+
+    userTochangeRole.role = userTochangeRole.role === "seller" ? "user" : "seller";
+    userTochangeRole.save();
+    statusFunc(res, 200, userTochangeRole);
+})
+
+exports.checkVerifiedUser = catchAsync(async (req, res, next) => {
+    const checkIfVerified = await user.findOne({
+        where: {
+            id: res.locals.userData.id
+        }
+    })
+
+    if (!checkIfVerified) {
+        return statusFunc(res, 400, "cannot find user with that ID");
+    }
+
+    if (!checkIfVerified.isVerified) {
+        return statusFunc(res, 400, "user not verified! PLEASE VERIFY");
+    }
     next();
 })
 

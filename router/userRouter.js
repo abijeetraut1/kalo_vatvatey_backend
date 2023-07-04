@@ -4,11 +4,19 @@ const userController = require("../controller/authController");
 
 router.post("/signup", userController.signup);
 router.post("/login", userController.login);
-router.get("/verification", 
+router.get("/verification",
     userController.isLoggedIn,
     userController.givePermissionTo("user"),
     userController.checkVerificationCode
 );
+
+// change role
+router.patch("/change_role",
+    userController.isLoggedIn,
+    userController.checkVerifiedUser,
+    userController.changeRole
+);
+
 router.get("/verification/:verificationJWT", userController.checkVerificationLink);
 router.post('/forgetPassword', userController.forgetPassword);
 router.post("/resetPassword/:token", userController.resetPassword);

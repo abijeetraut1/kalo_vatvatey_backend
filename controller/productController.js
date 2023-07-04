@@ -30,7 +30,7 @@ const upload = {
 
 
 
-exports.create_product = async (req, res) => {
+exports.create_product = catchAsync(async (req, res) => {
     const imagesName = [];
     req.files.forEach(ele => {
         imagesName.push(ele.filename)
@@ -60,9 +60,9 @@ exports.create_product = async (req, res) => {
     })
 
     statusFunc(res, 201, created_product);
-}
+})
 
-exports.checkSold = async (req, res) => {
+exports.checkSold = catchAsync(async (req, res) => {
     const listedProduct = await product.findOne({
         where: {
             id: req.params.id
@@ -77,50 +77,40 @@ exports.checkSold = async (req, res) => {
     listedProduct.save();
 
     statusFunc(res, 200, listedProduct.isSold ? "congrulations! on selling your product" : "ooh! haven't sold yet");
-}
+})
 
-exports.show_products = async (req, res) => {
+exports.show_products = catchAsync(async (req, res) => {
     const showed_products = await database.products.findAll({
         where: {
             isDeleteByUser: false
         }
     });
     statusFunc(res, 200, showed_products);
-}
+})
 
-exports.show_filter_product = async (req, res) => {
+exports.show_filter_product = catchAsync(async (req, res) => {
     const {
         min,
         max,
         carColor,
         company
     } = req.params;
+
+
     const showed_products = await database.products.findAll({
         where: {
             [Op.or]: [{
-                    price: {
-                        [Op.between]: [min, max]
-                    },
-                    color:{
-                        [Op.or]: carColor
-                    },
-                    vehicleCompanyId: {
-                        [Op.or]: company
-                    }
+                price: {
+                    [Op.between]: [req.params.min, req.params.max]
                 },
-            ]
-            // price: {
-            //     [Op.between]: [ min, max ]
-            // },
-            // color: {
-
-            // }
-            // vehicleCompany: req.params.company === null ? " " : req.params.company,
-            // isDeleteByUser: false
+                color: carColor,
+                vehicleCompanyId: company
+            }, ]
         }
     });
+
     statusFunc(res, 200, showed_products);
-}
+})
 
 exports.delete_products = catchAsync(async (req, res) => {
     const deleteProduct = await product.findOne({
