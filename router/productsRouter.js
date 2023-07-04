@@ -104,6 +104,9 @@ router.get("/dashboard/uploads",
     dashboardController.viewUploads
 );
 
+// Search endpoint
+router.get("/search/:key",productController.searchProducts)
+
 
 
 module.exports = router;

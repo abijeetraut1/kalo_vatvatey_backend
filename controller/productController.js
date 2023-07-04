@@ -1,6 +1,7 @@
 const multer = require("multer");
 const process = require("node:process");
 const {
+    QueryTypes,
     Op,
     INTEGER
 } = require("sequelize");
@@ -213,4 +214,45 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
     })
 
     statusFunc(res, 201, add_favourite)
+})
+
+
+// exports.searchProduct = catchAsync(async (req, res) =>{
+//     const searchQuery = req.params.key
+//     const search = await product.findAll({where:{
+//         [Op.or]: [
+//             {
+//                 name:{
+//                 [Op.like]:`%${searchQuery}%`
+//                 }
+//             },
+//             {
+//                 brand : {
+//                     [Op.like]:`%${searchQuery}%`
+//                 },
+//             },
+//             {
+//                 modal:{
+//                     [Op.like]:`%${searchQuery}%`
+//                 }
+//             }
+//             ]
+//     }})
+//     console.log(search)
+//     return res.json({search})
+// })
+
+exports.searchProducts = catchAsync(async(req,res,next)=>{
+    const searchQuery = `%${req.params.key}%`
+    console.log(searchQuery)
+    let search
+    try {
+         search = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id  WHERE products.name LIKE ? OR vehicleCompanies.companyName LIKE ? OR products.modal LIKE ? ", { type: QueryTypes.SELECT,
+            replacements: [searchQuery, searchQuery, searchQuery]
+         });
+    } catch (error) {
+        console.log(error)
+    }
+    return res.json({search})
+
 })
