@@ -18,7 +18,7 @@ router.get("/show_products",
     productController.show_products
 );
 
-router.get("/show_product/:min/:max/:color/:company",
+router.get("/show_product/:min/:max/:carColor/:company",
     productController.show_filter_product
 );
 

@@ -36,7 +36,6 @@ exports.create_product = async (req, res) => {
         imagesName.push(ele.filename)
     });
 
-    console.log(req.body.year)
     const created_product = await product.create({
         name: req.body.name,
         company: req.body.company * 1,
@@ -90,14 +89,34 @@ exports.show_products = async (req, res) => {
 }
 
 exports.show_filter_product = async (req, res) => {
+    const {
+        min,
+        max,
+        carColor,
+        company
+    } = req.params;
     const showed_products = await database.products.findAll({
         where: {
-            price: {
-                [Op.between]: [req.params.min, req.params.max]
-            },
-            color: req.params.color,
-            vehicleCompany: req.params.company,
-            isDeleteByUser: false
+            [Op.or]: [{
+                    price: {
+                        [Op.between]: [min, max]
+                    },
+                    color:{
+                        [Op.or]: carColor
+                    },
+                    vehicleCompanyId: {
+                        [Op.or]: company
+                    }
+                },
+            ]
+            // price: {
+            //     [Op.between]: [ min, max ]
+            // },
+            // color: {
+
+            // }
+            // vehicleCompany: req.params.company === null ? " " : req.params.company,
+            // isDeleteByUser: false
         }
     });
     statusFunc(res, 200, showed_products);

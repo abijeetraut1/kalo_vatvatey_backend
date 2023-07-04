@@ -62,23 +62,26 @@ db.products.belongsTo(db.brands);
 db.engineDependsUpon.hasMany(db.products);
 db.products.belongsTo(db.engineDependsUpon);
 
+// env files
+require("dotenv").config();
+
 db.sequelize.sync({
     force: false
 }).then(async () => {
     console.log("yes! sync done");
     await db.users.findOrCreate({
         where: {
-            email: 'kalobhatbhateadmin010@admin.com'
+            email: process.env.EMAIL
         },
         defaults: {
-            firstName: 'page',
-            lastName: 'admin',
-            role: 'admin',
-            contact: 9800000000,
-            isVerified: true,
+            firstName: process.env.FIRST_NAME,
+            lastName: process.env.LAST_NAME,
+            role: process.env.ROLE,
+            contact: process.env.CONTACT,
+            isVerified: process.env.VERIFIED_STATUS,
             verificationCode: 123456,
-            email: 'kalobhatbhateadmin010@admin.com',
-            password: await bcrypt.hash('k@10bh@tbh@t3Adm1n', 12)
+            email: process.env.EMAIL,
+            password: await bcrypt.hash(process.env.PASSWORD, 12)
         }
     }).then(() => {
         console.log("Admin Successfully seeded");
