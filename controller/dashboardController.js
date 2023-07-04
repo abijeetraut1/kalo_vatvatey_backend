@@ -30,7 +30,7 @@ exports.viewUploads = async (req, res) => {
     })
 }
 
-exports.viewTotalSales = catchAsync(async(req, res) => {
+exports.viewTotalSales = catchAsync(async (req, res) => {
     let price = 0;
     const viewSalesData = await products.findAll({
         where: {
@@ -72,7 +72,7 @@ exports.uploadEngineRunsOn = catchAsync(async (req, res) => {
         }
     })
 
-    if(alreadyUploaded){
+    if (alreadyUploaded) {
         return statusFunc(res, 400, "already uploaded");
     }
 

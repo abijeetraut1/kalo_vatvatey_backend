@@ -11,7 +11,7 @@ const statusFunc = (res, status, message) => {
 }
 
 // upload review
-exports.review_upload = catchAsync (async (req, res) => {
+exports.review_upload = catchAsync(async (req, res) => {
     const {
         reviewText,
         ratingPoint
@@ -40,7 +40,7 @@ exports.review_upload = catchAsync (async (req, res) => {
 
 
 // udpate review
-exports.updateReview = catchAsync (async (req, res) => {
+exports.updateReview = catchAsync(async (req, res) => {
     const {
         updateReviewText,
         updateRatingPoint
@@ -53,7 +53,7 @@ exports.updateReview = catchAsync (async (req, res) => {
         }
     });
 
-    if(!updateReview){
+    if (!updateReview) {
         return statusFunc(res, 200, "cannot find review to update");
     }
 
@@ -74,7 +74,7 @@ exports.deleteReview = catchAsync(async (req, res) => {
         }
     });
 
-    if(!findReview){
+    if (!findReview) {
         return statusFunc(res, 200, "you haven't commented yet");
     }
 
