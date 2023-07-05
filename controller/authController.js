@@ -43,6 +43,7 @@ const DetectEmptyForm = (res, field) => {
 
 // SIGNUP
 exports.signup = catchAsync(async (req, res) => {
+    console.log(req.body);
     const {
         firstName,
         lastName,

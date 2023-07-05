@@ -214,3 +214,6 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
 
     statusFunc(res, 201, add_favourite)
 })
+
+
+// order product

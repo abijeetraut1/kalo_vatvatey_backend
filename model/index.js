@@ -1,6 +1,9 @@
 const DBconfig = require("./../config/config");
 const bcrypt = require("bcrypt");
 
+// env files
+require("dotenv").config();
+
 const {
     Sequelize,
     DataTypes
@@ -37,6 +40,7 @@ db.favourites = require("./dataModel/favourite")(sequelize, DataTypes);
 db.addToCarts = require("./dataModel/addToCart")(sequelize, DataTypes);
 db.brands = require("./dataModel/vehicleCompany")(sequelize, DataTypes);
 db.engineDependsUpon = require("./dataModel/engineDependsOn")(sequelize, DataTypes);
+db.orders = require("./dataModel/orderModel")(sequelize, DataTypes);
 
 // relation reviews
 db.users.hasMany(db.reviews);
@@ -62,8 +66,11 @@ db.products.belongsTo(db.brands);
 db.engineDependsUpon.hasMany(db.products);
 db.products.belongsTo(db.engineDependsUpon);
 
-// env files
-require("dotenv").config();
+// order
+db.users.hasMany(db.orders);
+db.orders.belongsTo(db.users);
+
+
 
 db.sequelize.sync({
     force: false
@@ -78,7 +85,7 @@ db.sequelize.sync({
             lastName: process.env.LAST_NAME,
             role: process.env.ROLE,
             contact: process.env.CONTACT,
-            isVerified: process.env.VERIFIED_STATUS,
+            isVerified: 1,
             verificationCode: 123456,
             email: process.env.EMAIL,
             password: await bcrypt.hash(process.env.PASSWORD, 12)

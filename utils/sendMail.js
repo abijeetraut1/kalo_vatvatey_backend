@@ -23,6 +23,6 @@ module.exports = async (sendTo, code, verificatonLink, name) => {
         })
         console.log("verification code send");
     } catch (err) {
-        return statusFunc(req, 400, "too many request please try again later");
+        return statusFunc(res, 400, "too many request please try again later");
     }
 }
