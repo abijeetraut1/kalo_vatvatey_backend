@@ -34,7 +34,6 @@ router.patch("/sold/:id",
 
 router.post("/create_products",
     authController.isLoggedIn,
-    authController.checkVerifiedUser,
     authController.givePermissionTo("seller"),
     upload.array("photo", 5),
     productController.create_product
@@ -43,7 +42,6 @@ router.post("/create_products",
 
 router.patch("/update_product/:id",
     authController.isLoggedIn,
-    authController.checkVerifiedUser,
     authController.givePermissionTo("seller"),
     productController.update_products
 );
@@ -58,21 +56,18 @@ router.delete("/delete_product/:id",
 // review
 router.post("/:id/review",
     authController.isLoggedIn,
-    authController.checkVerifiedUser,
     authController.givePermissionTo("user"),
     reviewController.review_upload
 );
 
 router.delete("/:id/review/delete",
     authController.isLoggedIn,
-    authController.checkVerifiedUser,
     authController.givePermissionTo("user"),
     reviewController.deleteReview
 );
 
 router.patch("/:id/review/update",
     authController.isLoggedIn,
-    authController.checkVerifiedUser,
     authController.givePermissionTo("user"),
     reviewController.updateReview
 );
@@ -81,7 +76,6 @@ router.patch("/:id/review/update",
 // add to cart
 router.post("/addtocart/:productId",
     authController.isLoggedIn,
-    authController.checkVerifiedUser,
     authController.givePermissionTo("user"),
     productController.addToCart
 );
@@ -90,7 +84,6 @@ router.post("/addtocart/:productId",
 // add to favourite 
 router.post("/favourite/:productId",
     authController.isLoggedIn,
-    authController.checkVerifiedUser,
     authController.givePermissionTo("user"),
     productController.AddToFavourites
 )
@@ -99,7 +92,6 @@ router.post("/favourite/:productId",
 // dashboard / tracker seller
 router.get("/dashboard/uploads",
     authController.isLoggedIn,
-    authController.checkVerifiedUser,
     authController.givePermissionTo("seller"),
     dashboardController.viewUploads
 );

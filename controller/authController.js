@@ -79,7 +79,7 @@ exports.signup = catchAsync(async (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        contact: req.body.phoneno,
+        phone: req.body.phone,
         password: await bcrypt.hash(req.body.password, 12),
         role: "user",
         isVerified: false,
@@ -93,8 +93,6 @@ exports.signup = catchAsync(async (req, res) => {
         expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
     })
 
-    // sendmail
-    sendMail(req.body.email, code, verificatonLink, req.body.name);
 
     createCookies(res, 201, createUserAccount);
 })
@@ -154,6 +152,11 @@ exports.login = catchAsync(async (req, res) => {
 
     if (userSignin === null) {
         return statusFunc(res, 404, "user not found! PEASE CREATE AN ACCOUNT");
+    }
+
+    if(userSignin.isVerified === false || userSignin.isVerified === 0) {
+        // sendmail
+        return sendMail(req.body.email, code, verificatonLink, req.body.name);
     }
 
     if (await bcrypt.compare(req.body.password, userSignin.password)) {

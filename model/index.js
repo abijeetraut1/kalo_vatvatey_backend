@@ -74,6 +74,7 @@ db.orders.belongsTo(db.users);
 
 db.sequelize.sync({
     force: false
+
 }).then(async () => {
     console.log("yes! sync done");
     await db.users.findOrCreate({
@@ -85,7 +86,7 @@ db.sequelize.sync({
             lastName: process.env.LAST_NAME,
             role: process.env.ROLE,
             contact: process.env.CONTACT,
-            isVerified: 1,
+            isVerified: 0,
             verificationCode: 123456,
             email: process.env.EMAIL,
             password: await bcrypt.hash(process.env.PASSWORD, 12)
