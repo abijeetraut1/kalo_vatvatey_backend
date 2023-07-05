@@ -22,6 +22,8 @@ module.exports = (err, req, res, next) => {
                 errorName: err.name,
                 errorMessage: err.message
             })
+        }else{
         }
     }
+    console.log("err.name")
 }

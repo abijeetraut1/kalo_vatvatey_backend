@@ -34,7 +34,7 @@ router.patch("/sold/:id",
 
 router.post("/create_products",
     authController.isLoggedIn,
-    authController.givePermissionTo("seller"),
+    // authController.givePermissionTo("seller"),
     upload.array("photo", 5),
     productController.create_product
 );
@@ -96,6 +96,9 @@ router.get("/dashboard/uploads",
     dashboardController.viewUploads
 );
 
+
+// Search endpoint
+router.get("/search/:key",productController.searchProducts)
 
 
 module.exports = router;

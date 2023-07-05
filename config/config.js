@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-if (process.env.enviroment === "development") {
+// if (process.env.enviroment === "development") {
     console.log("running on development");
     module.exports = {
         HOST: "localhost",
@@ -19,22 +19,22 @@ if (process.env.enviroment === "development") {
         }
     }
 
-} else {
-    console.log("running on prodction");
-    module.exports = {
-        HOST: process.env.DB_HOST,
-        USER: process.env.DB_USER,
-        PASS: process.env.DB_PASS,
-        POST: process.env.DB_PORT,
+// } else {
+//     console.log("running on prodction");
+//     module.exports = {
+//         HOST: process.env.DB_HOST,
+//         USER: process.env.DB_USER,
+//         PASS: process.env.DB_PASS,
+//         POST: process.env.DB_PORT,
 
-        // database identification
-        db: process.env.DB_COLLECTION,
-        dialect: "mysql",
-        pool: {
-            max: 5,
-            min: 0,
-            accurate: 30000,
-            idle: 10000
-        }
-    }
-}
+//         // database identification
+//         db: process.env.DB_COLLECTION,
+//         dialect: "mysql",
+//         pool: {
+//             max: 5,
+//             min: 0,
+//             accurate: 30000,
+//             idle: 10000
+//         }
+//     }
+// }

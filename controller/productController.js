@@ -1,8 +1,8 @@
 const multer = require("multer");
 const process = require("node:process");
 const {
-    Op,
-    INTEGER
+    QueryTypes,
+    Op
 } = require("sequelize");
 const catchAsync = require('../utils/catchAsync');
 const database = require('./../model/index');
@@ -13,6 +13,7 @@ const favourite = database.favourites;
 const statusFunc = require("./../utils/statusFunc");
 
 const multerStorage = multer.memoryStorage();
+require("dotenv").config();
 
 const multerFilter = (req, file, cb) => {
     if (file.mimetype.startsWith("image")) {
@@ -31,35 +32,43 @@ const upload = {
 
 
 exports.create_product = catchAsync(async (req, res) => {
-    const imagesName = [];
-    req.files.forEach(ele => {
-        imagesName.push(ele.filename)
-    });
+    try {
+        const imagesName = [];
+        req.files.forEach(ele => {
+            imagesName.push(ele.filename)
+        });
 
-    const created_product = await product.create({
-        name: req.body.name,
-        company: req.body.company * 1,
-        boughtYear: req.body.year,
-        price: req.body.price,
-        description: req.body.description,
-        modal: req.body.modal,
-        images: imagesName,
-        shortDescription: req.body.shortDescription,
-        userId: res.locals.userData.id,
-        vehicleCompanyId: 1,
-        color: req.body.color,
-        kmDriven: req.body.kmDriven,
-        ownerShip: req.body.ownership,
-        engineDisplacement: req.body.engineDisplacement,
-        milage: req.body.milage,
-        wheelSize: req.body.wheelsize,
-        engineDepedsOnId: 1,
-        isSold: false,
-        isDeleteByUser: false,
-        isNegotiable: req.body.negotiable,
-    })
+        const created_product = await product.create({
+            name: req.body.name,
+            company: req.body.company * 1,
+            boughtYear: req.body.year,
+            price: req.body.price,
+            description: req.body.description,
+            modal: req.body.modal,
+            images: imagesName,
+            shortDescription: req.body.shortDescription,
+            userId: res.locals.userData.id,
+            vehicleCompanyId: 1,
+            color: req.body.color,
+            kmDriven: req.body.kmDriven,
+            ownerShip: req.body.ownership,
+            engineDisplacement: req.body.engineDisplacement,
+            milage: req.body.milage,
+            wheelSize: req.body.wheelsize,
+            engineDepedsOnId: 1,
+            isSold: false,
+            isDeleteByUser: false,
+            isNegotiable: req.body.negotiable,
+        })
 
-    statusFunc(res, 201, created_product);
+        statusFunc(res, 201, created_product);
+    } catch(err){
+        if(process.env.ENVIROMENT === "development"){
+            statusFunc(res, 500, "you havent uploaded the relation product");
+        }else{
+            statusFunc(res, 500, "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT");
+        }
+    }
 })
 
 exports.checkSold = catchAsync(async (req, res) => {
@@ -215,5 +224,21 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
     statusFunc(res, 201, add_favourite)
 })
 
+
+exports.searchProducts = catchAsync(async(req,res,next)=>{
+    const searchQuery = `%${req.params.key}%`
+    console.log(searchQuery)
+    let search
+    try {
+        search = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id  WHERE products.name LIKE ? OR vehicleCompanies.companyName LIKE ? OR products.modal LIKE ? ", { type: QueryTypes.SELECT,
+            replacements: [searchQuery, searchQuery, searchQuery]
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    console.log(search)
+    return res.json({search})
+
+})
 
 // order product
