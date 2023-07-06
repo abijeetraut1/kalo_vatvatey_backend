@@ -224,12 +224,28 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
     statusFunc(res, 201, add_favourite)
 })
 
+// const variantSeprator = (storeArray, dataObject, field) => {
+//     if(storeArray.includes(dataObject.field)){
+//         return;
+//     }else if (!storeArray.includes(dataObject.field)){
+//         return storeArray.push(dataObject.field);
+//     }
+// }
+
+function addItemIfNotExists(item, arr, propertyName) {
+    if (arr.includes(item[propertyName])) {
+        console.log(propertyName + " already exists");
+    } else {
+        arr.push(item[propertyName]);
+    }
+}
+
 
 exports.searchProducts = catchAsync(async (req, res, next) => {
     const searchQuery = `%${req.params.key}%`
     console.log(searchQuery)
     let search;
-    
+
     let color = [];
     let type = [];
     let ownerShip = [];
@@ -246,35 +262,36 @@ exports.searchProducts = catchAsync(async (req, res, next) => {
 
             // color
             if (color.includes(item.color)) {
-                console.log("color already exist");
+                return;
+                // console.log("color already exist");
             } else if (!color.includes(item.color)) {
                 color.push(item.color);
             }
 
             // vehicleType
             if (type.includes(item.vehicleType)) {
-                console.log("color already exist");
+                return;
             } else if (!type.includes(item.vehicleType)) {
                 type.push(item.vehicleType);
             }
 
             // ownership
             if (ownerShip.includes(item.ownerShip)) {
-                console.log("color already exist");
+                return;
             } else if (!ownerShip.includes(item.ownerShip)) {
                 ownerShip.push(item.ownerShip);
             }
 
             // company
             if (company.includes(item.companyName)) {
-                console.log("color already exist");
+                return;
             } else if (!company.includes(item.companyName)) {
                 company.push(item.companyName);
             }
 
             // modal
             if (modal.includes(item.modal)) {
-                console.log("modal ready exist");
+                return;
             } else if (!modal.includes(item.modal)) {
                 modal.push(item.modal);
             }
