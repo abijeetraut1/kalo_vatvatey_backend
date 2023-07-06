@@ -62,10 +62,10 @@ exports.create_product = catchAsync(async (req, res) => {
         })
 
         statusFunc(res, 201, created_product);
-    } catch(err){
-        if(process.env.ENVIROMENT === "development"){
+    } catch (err) {
+        if (process.env.ENVIROMENT === "development") {
             statusFunc(res, 500, "you havent uploaded the relation product");
-        }else{
+        } else {
             statusFunc(res, 500, "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT");
         }
     }
@@ -119,7 +119,7 @@ exports.show_filter_product = catchAsync(async (req, res) => {
     });
 
     statusFunc(res, 200, showed_products);
-})
+});
 
 exports.delete_products = catchAsync(async (req, res) => {
     const deleteProduct = await product.findOne({
@@ -225,19 +225,23 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
 })
 
 
-exports.searchProducts = catchAsync(async(req,res,next)=>{
+exports.searchProducts = catchAsync(async (req, res, next) => {
     const searchQuery = `%${req.params.key}%`
     console.log(searchQuery)
     let search
     try {
-        search = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id  WHERE products.name LIKE ? OR vehicleCompanies.companyName LIKE ? OR products.modal LIKE ? ", { type: QueryTypes.SELECT,
+        search = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id  WHERE products.name LIKE ? OR vehicleCompanies.companyName LIKE ? OR products.modal LIKE ? ", {
+            type: QueryTypes.SELECT,
             replacements: [searchQuery, searchQuery, searchQuery]
         });
     } catch (error) {
         console.log(error);
     }
-    console.log(search)
-    return res.json({search})
+    return res.status(200).json({
+        status: "sucess",
+        length: search.length, 
+        search
+    })
 
 })
 
