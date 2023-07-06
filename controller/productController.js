@@ -112,7 +112,7 @@ exports.show_filter_product = catchAsync(async (req, res) => {
                 price: {
                     [Op.between]: [req.params.min, req.params.max]
                 },
-                color: carColor,
+                // color: carColor,
                 vehicleCompanyId: company
             }, ]
         }
@@ -228,18 +228,71 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
 exports.searchProducts = catchAsync(async (req, res, next) => {
     const searchQuery = `%${req.params.key}%`
     console.log(searchQuery)
-    let search
+    let search;
+    
+    let color = [];
+    let type = [];
+    let ownerShip = [];
+    let company = [];
+    let modal = [];
+
     try {
         search = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id  WHERE products.name LIKE ? OR vehicleCompanies.companyName LIKE ? OR products.modal LIKE ? ", {
             type: QueryTypes.SELECT,
             replacements: [searchQuery, searchQuery, searchQuery]
         });
+
+        search.forEach(item => {
+
+            // color
+            if (color.includes(item.color)) {
+                console.log("color already exist");
+            } else if (!color.includes(item.color)) {
+                color.push(item.color);
+            }
+
+            // vehicleType
+            if (type.includes(item.vehicleType)) {
+                console.log("color already exist");
+            } else if (!type.includes(item.vehicleType)) {
+                type.push(item.vehicleType);
+            }
+
+            // ownership
+            if (ownerShip.includes(item.ownerShip)) {
+                console.log("color already exist");
+            } else if (!ownerShip.includes(item.ownerShip)) {
+                ownerShip.push(item.ownerShip);
+            }
+
+            // company
+            if (company.includes(item.companyName)) {
+                console.log("color already exist");
+            } else if (!company.includes(item.companyName)) {
+                company.push(item.companyName);
+            }
+
+            // modal
+            if (modal.includes(item.modal)) {
+                console.log("modal ready exist");
+            } else if (!modal.includes(item.modal)) {
+                modal.push(item.modal);
+            }
+
+        })
     } catch (error) {
         console.log(error);
     }
+
+    console.log(color)
     return res.status(200).json({
         status: "sucess",
-        length: search.length, 
+        length: search.length,
+        company,
+        modal,
+        color,
+        type,
+        ownerShip,
         search
     })
 
