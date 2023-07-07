@@ -6,30 +6,49 @@ const products = database.products;
 const user = database.users;
 const engineDependsOn = database.engineDependsOn;
 const category = database.vehicleCategory;
+const {
+    QueryTypes
+} = require("sequelize");
 
 
 exports.viewUploads = async (req, res) => {
     let price = 0;
-    const uploadData = await products.findAll({
-        include: [{
-            model: category,
-            attributes: ['vehicleCategory']
-        }],
-        attributes: {
-            exclude: [
-                "createdAt",
-                "updatedAt",
-                "images",
-                "description",
-                "shortDescription",
-                "vehicleCategoryId"
-            ]
-        }
-    });
 
-    uploadData.forEach(el => {
-     c   price += el.price * 1;
-    })
+    /////Start
+    let uploadData
+    try {
+        uploadData = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id JOIN vehiclecategories ON products.vehicleCategoryId = vehiclecategories.id JOIN enginedepedsons ON products.engineDepedsOnId = enginedepedsons.id ", { type: QueryTypes.SELECT});
+    } catch (error) {
+        
+        console.log(error)
+    }
+    console.log(uploadData)
+///end
+
+    // const uploadData = await products.findAll({
+    //     include: [{
+    //         model: category,
+    //         attributes: ['vehicleCategory']
+    //     },  {
+    //         model: database.engineDependsUpon,
+    //         attributes: ['engineDepedsOnId']
+
+    //     }],
+    //     attributes: {
+    //         exclude: [
+    //             "createdAt",
+    //             "updatedAt",
+    //             "images",
+    //             "description",
+    //             "shortDescription",
+    //             // "vehicleCategoryId"
+    //         ]
+    //     }
+    // });
+
+    // uploadData.forEach(el => {
+    //     price += el.price * 1;
+    // })
     res.status(200).json({
         status: "success",
         totalWorthOfProduct: price,

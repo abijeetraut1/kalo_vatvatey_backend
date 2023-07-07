@@ -14,7 +14,7 @@ const db = require("./model/index")
 
 
 const app = express();
-const port = 8080 || process.env.PORT;
+const port = 8979;
 
 app.use(express.json());
 app.use(express.urlencoded({
