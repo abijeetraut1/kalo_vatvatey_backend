@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
         name: {
             type: Sequelize.STRING,
         },
-        company: {   // vehicle manufracturer
+        company: { // vehicle manufracturer
             type: Sequelize.INTEGER,
         },
         boughtYear: {
@@ -17,13 +17,13 @@ module.exports = (sequelize, Sequelize) => {
         description: {
             type: Sequelize.STRING,
         },
-        modal: {  // vehicle modal
+        modal: { // vehicle modal
             type: Sequelize.STRING,
         },
         images: {
             type: Sequelize.JSON,
         },
-        color:{
+        color: {
             type: Sequelize.STRING,
         },
         shortDescription: {
@@ -32,10 +32,10 @@ module.exports = (sequelize, Sequelize) => {
         userId: {
             type: Sequelize.INTEGER,
         },
-        kmDriven:{
+        kmDriven: {
             type: Sequelize.INTEGER,
         },
-        ownerShip:{
+        ownerShip: {
             type: Sequelize.INTEGER
         },
         engineDisplacement: {
@@ -44,19 +44,21 @@ module.exports = (sequelize, Sequelize) => {
         milage: {
             type: Sequelize.STRING
         },
+        category: {
+            type: Sequelize.STRING,
+        },
         wheelSize: {
             type: Sequelize.INTEGER,
         },
-        
-        isSold:{
+        isSold: {
             type: Sequelize.BOOLEAN
         },
-        isDeleteByUser:{
+        isDeleteByUser: {
             type: Sequelize.BOOLEAN
         },
-        isNegotiable:{
+        isNegotiable: {
             type: Sequelize.BOOLEAN
-        }
+        },
     })
 
     return Product;

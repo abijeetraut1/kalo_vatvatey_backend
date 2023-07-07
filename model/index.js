@@ -41,6 +41,8 @@ db.addToCarts = require("./dataModel/addToCart")(sequelize, DataTypes);
 db.brands = require("./dataModel/vehicleCompany")(sequelize, DataTypes);
 db.engineDependsUpon = require("./dataModel/engineDependsOn")(sequelize, DataTypes);
 db.orders = require("./dataModel/orderModel")(sequelize, DataTypes);
+db.vehicleCategory = require("./dataModel/vehicleCategory")(sequelize, DataTypes);
+
 
 // relation reviews
 db.users.hasMany(db.reviews);
@@ -70,7 +72,8 @@ db.products.belongsTo(db.engineDependsUpon);
 db.users.hasMany(db.orders);
 db.orders.belongsTo(db.users);
 
-
+db.vehicleCategory.hasMany(db.products);
+db.products.belongsTo(db.vehicleCategory);
 
 db.sequelize.sync({
     force: false
@@ -96,6 +99,7 @@ db.sequelize.sync({
     }).catch(err => {
         return console.log(" error " + err);
     })
+    
 })
 
 

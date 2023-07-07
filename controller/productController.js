@@ -46,16 +46,18 @@ exports.create_product = catchAsync(async (req, res) => {
             description: req.body.description,
             modal: req.body.modal,
             images: imagesName,
+            location: req.body.location,
             shortDescription: req.body.shortDescription,
             userId: res.locals.userData.id,
-            vehicleCompanyId: 1,
+            vehicleCompanyId: req.body.vehicleCompany,
             color: req.body.color,
             kmDriven: req.body.kmDriven,
             ownerShip: req.body.ownership,
             engineDisplacement: req.body.engineDisplacement,
             milage: req.body.milage,
             wheelSize: req.body.wheelsize,
-            engineDepedsOnId: 1,
+            engineDepedsOnId: req.body.engineDependsUpon * 1,
+            vehicleCategoryId: req.body.vehicleCategory * 1,
             isSold: false,
             isDeleteByUser: false,
             isNegotiable: req.body.negotiable,
@@ -224,22 +226,6 @@ exports.AddToFavourites = catchAsync(async (req, res) => {
     statusFunc(res, 201, add_favourite)
 })
 
-// const variantSeprator = (storeArray, dataObject, field) => {
-//     if(storeArray.includes(dataObject.field)){
-//         return;
-//     }else if (!storeArray.includes(dataObject.field)){
-//         return storeArray.push(dataObject.field);
-//     }
-// }
-
-function addItemIfNotExists(item, arr, propertyName) {
-    if (arr.includes(item[propertyName])) {
-        console.log(propertyName + " already exists");
-    } else {
-        arr.push(item[propertyName]);
-    }
-}
-
 
 exports.searchProducts = catchAsync(async (req, res, next) => {
     const searchQuery = `%${req.params.key}%`
@@ -263,7 +249,6 @@ exports.searchProducts = catchAsync(async (req, res, next) => {
             // color
             if (color.includes(item.color)) {
                 return;
-                // console.log("color already exist");
             } else if (!color.includes(item.color)) {
                 color.push(item.color);
             }
@@ -295,6 +280,9 @@ exports.searchProducts = catchAsync(async (req, res, next) => {
             } else if (!modal.includes(item.modal)) {
                 modal.push(item.modal);
             }
+
+            // category
+            
 
         })
     } catch (error) {

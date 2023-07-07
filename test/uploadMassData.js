@@ -61,6 +61,7 @@ const bike_list = [
 const database = require("./../model/index");
 const scooty = database.brands;
 const engineDepends = database.engineDependsUpon;
+const vehicleCategory = database.vehicleCategory;
 
 const uploadScooty = async (data, type) => {
     await scooty.create({
@@ -90,4 +91,23 @@ list.forEach(el => {
     engineDependsOn(el)
 })
 
+
+const bikeCategory = [
+    "super bike",
+    "super bike",
+    "normal",
+    "cruiser bike",
+    "Naked bike",
+    "Adventure bike",
+    "Touring bike",
+    "dual-sports bike",
+    "Motocross bike"
+]
+
+bikeCategory.forEach(el => {
+    // console.log(el)
+    vehicleCategory.create({
+        vehicleCategory: el
+    })
+})
 // send code

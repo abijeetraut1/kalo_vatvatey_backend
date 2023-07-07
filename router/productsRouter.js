@@ -91,8 +91,8 @@ router.post("/favourite/:productId",
 
 // dashboard / tracker seller
 router.get("/dashboard/uploads",
-    authController.isLoggedIn,
-    authController.givePermissionTo("seller"),
+    // authController.isLoggedIn,
+    // authController.givePermissionTo("seller"),
     dashboardController.viewUploads
 );
 

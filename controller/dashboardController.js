@@ -3,30 +3,56 @@ const statusFunc = require("../utils/statusFunc");
 const database = require("../model/index");
 const catchAsync = require("../utils/catchAsync");
 const products = database.products;
+const user = database.users;
 const engineDependsOn = database.engineDependsOn;
-// const 
+const category = database.vehicleCategory;
+
 
 exports.viewUploads = async (req, res) => {
     let price = 0;
     const uploadData = await products.findAll({
+        include: [{
+            model: category,
+            attributes: ['vehicleCategory']
+        }],
         attributes: {
             exclude: [
                 "createdAt",
                 "updatedAt",
                 "images",
                 "description",
-                "shortDescription"
+                "shortDescription",
+                "vehicleCategoryId"
             ]
         }
     });
 
     uploadData.forEach(el => {
-        price += el.price * 1;
+     c   price += el.price * 1;
     })
     res.status(200).json({
         status: "success",
         totalWorthOfProduct: price,
         uploadData
+    })
+}
+
+exports.viewAllUser = async (req, res) => {
+    const userLimit = 10;
+    const currentPage = 1;
+    const allUsers = await user.findAll({
+        attributes: {
+            exclude: ["password", "verificationCode", "isVerified", "createdAt", "updatedAt"]
+        },
+        limit: userLimit
+    })
+    const totalPages = Math.ceil(allUsers.length / userLimit);
+    res.status(200).json({
+        status: "success",
+        length: allUsers.length,
+        totalPages,
+        currentPage,
+        allUsers
     })
 }
 
