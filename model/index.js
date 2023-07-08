@@ -98,9 +98,7 @@ db.sequelize.sync({
         console.log("Admin Successfully seeded");
     }).catch(err => {
         return console.log(" error " + err);
-    })
-    
+    })  
 })
-
 
 module.exports = db;

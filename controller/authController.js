@@ -116,31 +116,6 @@ exports.checkVerificationCode = catchAsync(async (req, res, next) => {
     }
 })
 
-exports.checkVerificationLink = catchAsync(async (req, res) => {
-    if (req.params.verificationJWT) {
-        let decode;
-        try {
-            decode = jwt.verify(req.params.verificationJWT, process.env.JWT_VERIFICATION_SECRET);
-        } catch (err) {
-            return statusFunc(res, 400, "verification token expired");
-        };
-        const findUser = await user.findOne({
-            where: {
-                id: decode.id
-            }
-        });
-
-        if (!findUser) {
-            return statusFunc(res, 400, "cannot find user");
-        }
-        if (findUser.verificationCode === decode.code) {
-            findUser.isVerified = 1 || true;
-            findUser.save();
-        }
-        statusFunc(res, 200, "verified user")
-    }
-})
-
 
 // LOGIN
 exports.login = catchAsync(async (req, res) => {

@@ -1,4 +1,4 @@
-const statusFunc = require("./statusFunc")
+const statusFunc = require("../utils/statusFunc")
 require('dotenv').config();
 
 module.exports = (err, req, res, next) => {
@@ -9,6 +9,8 @@ module.exports = (err, req, res, next) => {
             return statusFunc(res, 400, "PLEASE LOGIN AGAIN");
         }else if(err.name === "TokenExpiredError"){
             return statusFunc(res, 400, "TOKEN EXPIRED! PLEASE LOGIN AGAIN");
+        }else if(err.name === "SequelizeValidationError"){
+            return statusFunc(res, 400, `forgot to add field: ${err.errors[0].path}`)
         }
 
     } else if (process.env.enviroment === "development") {
@@ -22,7 +24,6 @@ module.exports = (err, req, res, next) => {
                 errorName: err.name,
                 errorMessage: err.message
             })
-        }else{
         }
     }
     console.log("err.name")

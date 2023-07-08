@@ -41,33 +41,38 @@ exports.create_product = catchAsync(async (req, res) => {
         const created_product = await product.create({
             name: req.body.name,
             company: req.body.company * 1,
-            boughtYear: req.body.year,
-            price: req.body.price,
+            boughtYear: req.body.year * 1,
+            price: req.body.price * 1,
             description: req.body.description,
             modal: req.body.modal,
             images: imagesName,
             location: req.body.location,
             shortDescription: req.body.shortDescription,
             userId: res.locals.userData.id,
-            vehicleCompanyId: req.body.vehicleCompany,
+            vehicleCompanyId: req.body.vehicleCompany * 1,
             color: req.body.color,
-            kmDriven: req.body.kmDriven,
-            ownerShip: req.body.ownership,
-            engineDisplacement: req.body.engineDisplacement,
-            milage: req.body.milage,
-            wheelSize: req.body.wheelsize,
+            kmDriven: req.body.kmDriven * 1,
+            ownerShip: req.body.ownership * 1,
+            engineDisplacement: req.body.engineDisplacement * 1,
+            milage: req.body.milage * 1,
+            wheelSize: req.body.wheelsize * 1,
             engineDepedsOnId: req.body.engineDependsUpon * 1,
             vehicleCategoryId: req.body.vehicleCategory * 1,
+            category: req.body.category,
             isSold: false,
             isDeleteByUser: false,
             isNegotiable: req.body.negotiable,
+            isVerifiedByGarage: "unchecked"
         })
 
         statusFunc(res, 201, created_product);
     } catch (err) {
         if (process.env.ENVIROMENT === "development") {
-            statusFunc(res, 500, "you havent uploaded the relation product");
-        } else {
+            statusFunc(res, 500, {
+                status: "failed",
+                message: `Please Insert: ${err.errors[0].path}`
+            });
+        } else if (process.env.ENVIROMENT === "production") {
             statusFunc(res, 500, "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT");
         }
     }
@@ -282,7 +287,7 @@ exports.searchProducts = catchAsync(async (req, res, next) => {
             }
 
             // category
-            
+
 
         })
     } catch (error) {

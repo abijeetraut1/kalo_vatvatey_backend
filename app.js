@@ -7,7 +7,7 @@ const process = require("node:process");
 const jwt = require("jsonwebtoken");
 const statusFunc = require("./utils/statusFunc")
 const bcrypt = require('bcrypt');
-const globalErrorHandler = require("./utils/globalErrorHandler");
+const globalErrorHandler = require("./controller/globalErrorHandler");
 
 require("dotenv").config()
 const db = require("./model/index")

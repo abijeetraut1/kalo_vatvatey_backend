@@ -18,7 +18,6 @@ router.patch("/change_role",
     userController.changeRole
 );
 
-router.get("/verification/:verificationJWT", userController.checkVerificationLink);
 router.post('/forgetPassword', userController.forgetPassword);
 router.post("/resetPassword/:token", userController.resetPassword);
 router.patch("/update_password/:id", userController.updatePassword);

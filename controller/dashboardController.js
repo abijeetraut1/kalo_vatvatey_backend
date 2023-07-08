@@ -15,44 +15,19 @@ exports.viewUploads = async (req, res) => {
     let price = 0;
 
     /////Start
-    let uploadData
+    let allProducts
     try {
-        uploadData = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id JOIN vehiclecategories ON products.vehicleCategoryId = vehiclecategories.id JOIN enginedepedsons ON products.engineDepedsOnId = enginedepedsons.id ", { type: QueryTypes.SELECT});
+        allProducts = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id JOIN vehiclecategories ON products.vehicleCategoryId = vehiclecategories.id JOIN enginedepedsons ON products.engineDepedsOnId = enginedepedsons.id ", {
+            type: QueryTypes.SELECT,
+        });
     } catch (error) {
-        
         console.log(error)
     }
-    console.log(uploadData)
-///end
-
-    // const uploadData = await products.findAll({
-    //     include: [{
-    //         model: category,
-    //         attributes: ['vehicleCategory']
-    //     },  {
-    //         model: database.engineDependsUpon,
-    //         attributes: ['engineDepedsOnId']
-
-    //     }],
-    //     attributes: {
-    //         exclude: [
-    //             "createdAt",
-    //             "updatedAt",
-    //             "images",
-    //             "description",
-    //             "shortDescription",
-    //             // "vehicleCategoryId"
-    //         ]
-    //     }
-    // });
-
-    // uploadData.forEach(el => {
-    //     price += el.price * 1;
-    // })
+   
     res.status(200).json({
         status: "success",
         totalWorthOfProduct: price,
-        uploadData
+        allProducts
     })
 }
 
