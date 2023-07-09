@@ -2,84 +2,75 @@ const database = require("../index");
 
 module.exports = (sequelize, Sequelize) => {
     const Product = sequelize.define("products", {
-        name: {
+        name: {                         // product name
             type: Sequelize.STRING,
             allowNull: false
         },
-        company: { // vehicle manufracturer
+        companyId: {                    // kun company ko gadi ho ie: honda, pulser etc
+            type: Sequelize.INTEGER,    
+            allowNull: false
+        },
+        boughtYear: {                   // year of vehicle bought
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        boughtYear: {
+        price: {                        // estimated price of vehicle
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        price: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-
-        },
-        description: {
+        modal: {                        // vehicle modal
             type: Sequelize.STRING,
             allowNull: false
         },
-        modal: { // vehicle modal
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        images: {
+        images: {                       // images of vehicle
             type: Sequelize.JSON,
             allowNull: false
         },
-        location: {
+        location: {                     // location of vehicle uploader
             type: Sequelize.STRING,
             allowNull: false
         },
-        color: {
+        color: {                        // vehicle color
             type: Sequelize.STRING,
             allowNull: false
         },
-        shortDescription: {
+        userId: {                       // uploader id
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        kmDriven: {                     // how many KM does uploaded vehicle runned 
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        ownerShip: {                    // was is second hand or third hand
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        engineDisplacement: {           // vehicle cc's (kati cc ko gadi ho) 
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        milage: {                       // kati ko milage dinxa uploaded vehicle le
             type: Sequelize.STRING,
             allowNull: false
         },
-        userId: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        kmDriven: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        ownerShip: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        engineDisplacement: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        milage: {
+        category: {                     // kun category ko gadi ho eg: Naked, Normal, Sports
             type: Sequelize.STRING,
             allowNull: false
         },
-        category: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        wheelSize: {
+        wheelSize: {                    // wheel ko size kato xa
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        isVerifiedByGarage: {
+        isVerifiedByGarage: {           // tied-up garage le verify garako xa ki xaina 
             type: Sequelize.ENUM("unchecked", "verified", "unverified"),
             allowNull: false
         },
-        isDeleteByUser: {
+        isDeleteByUser: {               // product delete garera delete garako xa ki xaina
             type: Sequelize.BOOLEAN,
             allowNull: false
         },
-        isNegotiable: {
+        isNegotiable: {                 // listed price kam hunxa ki hudaina 
             type: Sequelize.BOOLEAN,
             allowNull: false
         },
@@ -87,3 +78,9 @@ module.exports = (sequelize, Sequelize) => {
 
     return Product;
 }
+
+/*
+    removed from model:
+        1. description 
+        2. short description
+*/

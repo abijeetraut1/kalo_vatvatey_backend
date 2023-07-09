@@ -40,7 +40,7 @@ exports.create_product = catchAsync(async (req, res) => {
 
         const created_product = await product.create({
             name: req.body.name,
-            company: req.body.company * 1,
+            companyId: req.body.company * 1,
             boughtYear: req.body.year * 1,
             price: req.body.price * 1,
             description: req.body.description,

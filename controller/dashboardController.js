@@ -17,7 +17,7 @@ exports.viewUploads = async (req, res) => {
     /////Start
     let allProducts
     try {
-        allProducts = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.company = vehicleCompanies.id JOIN vehiclecategories ON products.vehicleCategoryId = vehiclecategories.id JOIN enginedepedsons ON products.engineDepedsOnId = enginedepedsons.id ", {
+        allProducts = await database.sequelize.query("SELECT * FROM products JOIN vehicleCompanies ON products.companyId = vehicleCompanies.id JOIN vehiclecategories ON products.vehicleCategoryId = vehiclecategories.id JOIN enginedepedsons ON products.engineDepedsOnId = enginedepedsons.id ", {
             type: QueryTypes.SELECT,
         });
     } catch (error) {
