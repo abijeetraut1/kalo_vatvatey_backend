@@ -105,27 +105,76 @@ exports.show_products = catchAsync(async (req, res) => {
 })
 
 exports.show_filter_product = catchAsync(async (req, res) => {
-    const {
-        min,
-        max,
-        carColor,
-        company
-    } = req.params;
+    // const {
+    //     min,
+    //     max,
+    //     carColor,
+    //     company
+    // } = req.params;
+
+    console.log(req.query)
+    let showed_products;
+
+    // // only price 
+    // if(min != null && max != null){
+    //     showed_products = await database.products.findAll({
+    //         where: {
+    //             price: {
+    //                 [Op.between]: [req.params.min, req.params.max]
+    //             },
+    //         },
+    //     });
+    // }
+
+    // // carColor and company
+    // else if((carColor != null) && (company != null)){
+    //     showed_products = await database.products.findAll({
+    //         where: {
+    //             vehicleCompanyId: company,
+    //             color: carColor,
+    //         },
+    //     });
+    // }
+
+    // // price and color
+    // else if((carColor != null) && (company != null)){
+    //     console.log()
+    //     showed_products = await database.products.findAll({
+    //         where: {
+    //             price: {
+    //                 [Op.between]: [req.params.min, req.params.max]
+    //             },
+    //             color: carColor,
+    //         },
+    //     });
+    // }
+
+    // // only carColor
+    // else if ((carColor != null)){
+    //     showed_products = await database.products.findAll({
+    //         where: {
+    //             color: carColor,
+    //         },
+    //     });
+    // }
+    
+    // // price, carColor and company 
+    // else if((min != null && max != null) && (carColor != null) && (company != null)){
+        // showed_products = await database.products.findAll({
+        //     where: {
+        //         price: {
+        //             [Op.between]: [req.params.min, req.params.max]
+        //         },
+        //         [Op.or]:[
+        //             {color: carColor},
+        //             {color: null}
+        //         ],
+        //     },
+        // });
+    // } 
 
 
-    const showed_products = await database.products.findAll({
-        where: {
-            [Op.or]: [{
-                price: {
-                    [Op.between]: [req.params.min, req.params.max]
-                },
-                // color: carColor,
-                vehicleCompanyId: company
-            }, ]
-        }
-    });
-
-    statusFunc(res, 200, showed_products);
+    statusFunc(res, 200, "showed_products");
 });
 
 exports.delete_products = catchAsync(async (req, res) => {
