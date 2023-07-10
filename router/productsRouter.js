@@ -18,8 +18,10 @@ router.get("/show_products",
     productController.show_products
 );
 
-router.get("/show_product/filter?min&max&color&vehicleCompanyId",
+// need to change method into POST
+router.get("/show_products/filter",
     productController.show_filter_product
+   
 );
 
 router.get("/show_one_product/:id",
@@ -98,7 +100,7 @@ router.get("/dashboard/uploads",
 
 
 // Search endpoint
-router.get("/search/:key",productController.searchProducts)
+router.get("/search/:key", productController.searchProducts)
 
 
 module.exports = router;

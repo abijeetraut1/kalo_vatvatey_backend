@@ -58,6 +58,7 @@ exports.create_product = catchAsync(async (req, res) => {
             wheelSize: req.body.wheelsize * 1,
             engineDepedsOnId: req.body.engineDependsUpon * 1,
             vehicleCategoryId: req.body.vehicleCategory * 1,
+            garageId: req.body.garageId * 1,
             category: req.body.category,
             isSold: false,
             isDeleteByUser: false,
@@ -105,76 +106,38 @@ exports.show_products = catchAsync(async (req, res) => {
 })
 
 exports.show_filter_product = catchAsync(async (req, res) => {
-    // const {
-    //     min,
-    //     max,
-    //     carColor,
-    //     company
-    // } = req.params;
+    const {
+        minPrice,
+        maxPrice,
+        vehicleId,
+        color
+    } = req.query;
+
+    const filter = {};
 
     console.log(req.query)
-    let showed_products;
 
-    // // only price 
-    // if(min != null && max != null){
-    //     showed_products = await database.products.findAll({
-    //         where: {
-    //             price: {
-    //                 [Op.between]: [req.params.min, req.params.max]
-    //             },
-    //         },
-    //     });
-    // }
+    filter.price = {
+        [Op.between]: [minPrice * 1, maxPrice * 1]
+    }
 
-    // // carColor and company
-    // else if((carColor != null) && (company != null)){
-    //     showed_products = await database.products.findAll({
-    //         where: {
-    //             vehicleCompanyId: company,
-    //             color: carColor,
-    //         },
-    //     });
-    // }
+    if (vehicleId !== undefined) {
+        if(vehicleId != ''){
+            filter.vehicleCompanyId = vehicleId * 1;
+        }
+    }
 
-    // // price and color
-    // else if((carColor != null) && (company != null)){
-    //     console.log()
-    //     showed_products = await database.products.findAll({
-    //         where: {
-    //             price: {
-    //                 [Op.between]: [req.params.min, req.params.max]
-    //             },
-    //             color: carColor,
-    //         },
-    //     });
-    // }
+    if (color !== undefined) {
+        if (color != '') {
+            filter.color = color;
+        }
+    }
 
-    // // only carColor
-    // else if ((carColor != null)){
-    //     showed_products = await database.products.findAll({
-    //         where: {
-    //             color: carColor,
-    //         },
-    //     });
-    // }
-    
-    // // price, carColor and company 
-    // else if((min != null && max != null) && (carColor != null) && (company != null)){
-        // showed_products = await database.products.findAll({
-        //     where: {
-        //         price: {
-        //             [Op.between]: [req.params.min, req.params.max]
-        //         },
-        //         [Op.or]:[
-        //             {color: carColor},
-        //             {color: null}
-        //         ],
-        //     },
-        // });
-    // } 
+    const filteredProducts = await product.findAll({
+        where: filter
+    });
 
-
-    statusFunc(res, 200, "showed_products");
+    statusFunc(res, 200, filteredProducts);
 });
 
 exports.delete_products = catchAsync(async (req, res) => {
@@ -217,11 +180,14 @@ exports.update_products = catchAsync(async (req, res) => {
         price,
         modal
     } = req.body;
+    
     const update_product = await product.findOne({
         where: {
             id: req.params.id
         }
     });
+
+    console.log(update_product);
     if (!update_product) {
         return statusFunc(res, 404, "cannot find the product you are searching");
     }
