@@ -1,5 +1,4 @@
 const multer = require("multer");
-const process = require("node:process");
 const {
     QueryTypes,
     Op
