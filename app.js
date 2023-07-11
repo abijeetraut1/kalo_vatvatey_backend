@@ -3,7 +3,6 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const session = require('express-session');
 const cors = require("cors");
-const process = require("node:process");
 const jwt = require("jsonwebtoken");
 const statusFunc = require("./utils/statusFunc")
 const bcrypt = require('bcrypt');
