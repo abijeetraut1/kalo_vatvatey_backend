@@ -14,8 +14,8 @@ module.exports = (sequelize, Sequelize) => {
         password: {
             type: Sequelize.STRING,
         },
-        phone:{
-            type: Sequelize.BIGINT
+        contact:{
+            type: Sequelize.BIGINT,
         },
         role: {
             type: Sequelize.STRING,
