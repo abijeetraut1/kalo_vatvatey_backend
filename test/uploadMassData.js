@@ -216,6 +216,7 @@ const database = require("./../model/index");
 const scooty = database.brands;
 const engineDepends = database.engineDependsUpon;
 const vehicleCategory = database.vehicleCategory;
+const garage = database.garage;
 
 const uploadScooty = async (data, type) => {
     await scooty.create({
@@ -257,6 +258,43 @@ const bikeCategory = [
     "dual-sports bike",
     "Motocross bike"
 ]
+
+
+const linkedGarage = [{
+        name: "santi garage",
+        location: "itahari",
+        contact: "kheti khola",
+        contact: "9800000000",
+        city: "anywhere"
+    }, {
+        name: "asnti garage",
+        location: "belbari",
+        contact: "kesala khola",
+        contact: "9800000000",
+        city: "anywhere"
+    },
+    {
+        name: "basanti garage",
+        location: "kerabari",
+        contact: "kerabari khola",
+        contact: "9800000000",
+        city: "anywhere"
+    }
+]
+
+const uploadGarage = async(el) => {
+    await garage.create({
+        garadgeName: el.name,
+        location: el.location,
+        city: el.city,
+        contact: el.contact
+    })
+}
+
+linkedGarage.forEach(el => {
+    uploadGarage(el);
+})
+
 
 const vehicleCate = async (el) => {
     await vehicleCategory.create({

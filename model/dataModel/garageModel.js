@@ -2,7 +2,7 @@ const database = require("../index");
 // const { DataTypes } = require("sequelize")
 
 module.exports = (sequelize, DataTypes) => {
-    const Garadge = sequelize.define("garadge", {
+    const Garage = sequelize.define("garage", {
         garadgeName: {
             type: DataTypes.STRING,
         },
@@ -17,5 +17,5 @@ module.exports = (sequelize, DataTypes) => {
         },
     });
 
-    return Garadge;
+    return Garage;
 };

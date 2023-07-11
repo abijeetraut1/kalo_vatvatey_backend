@@ -36,7 +36,7 @@ router.patch("/sold/:id",
 
 router.post("/create_products",
     authController.isLoggedIn,
-    // authController.givePermissionTo("seller"),
+    // authController.givePermissionTo("seller"),P
     upload.array("photo", 5),
     productController.create_product
 );

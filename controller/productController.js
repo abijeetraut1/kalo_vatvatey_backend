@@ -31,7 +31,7 @@ const upload = {
 
 
 
-exports.create_product = catchAsync(async (req, res) => {
+exports.create_product = async (req, res) => {
     try {
         const imagesName = [];
         req.files.forEach(ele => {
@@ -65,19 +65,19 @@ exports.create_product = catchAsync(async (req, res) => {
             isNegotiable: req.body.negotiable,
             isVerifiedByGarage: "unchecked"
         })
-
         statusFunc(res, 201, created_product);
     } catch (err) {
         if (process.env.ENVIROMENT === "development") {
             statusFunc(res, 500, {
                 status: "failed",
-                message: `Please Insert: ${err.errors[0].path}`
+                message: `Please Insert: ${err.errors[0].path}`,
+                stack: err.stack
             });
         } else if (process.env.ENVIROMENT === "production") {
             statusFunc(res, 500, "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT");
         }
     }
-})
+}
 
 exports.checkSold = catchAsync(async (req, res) => {
     const listedProduct = await product.findOne({

@@ -22,7 +22,14 @@ module.exports = (err, req, res, next) => {
             console.log(err)
             return statusFunc(res, 400, {
                 errorName: err.name,
-                errorMessage: err.message
+                errorMessage: err.message,
+                errS:err.stack
+            })
+        }else{
+            return statusFunc(res, 400, {
+                errorName: err.name,
+                errorMessage: err.message,
+                errS:err.stack
             })
         }
     }

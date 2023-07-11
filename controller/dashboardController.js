@@ -6,8 +6,10 @@ const products = database.products;
 const user = database.users;
 const engineDependsOn = database.engineDependsOn;
 const category = database.vehicleCategory;
+const garage = database.garage;
+
 const {
-    QueryTypes
+    QueryTypes, DatabaseError
 } = require("sequelize");
 
 
@@ -17,7 +19,7 @@ exports.viewUploads = async (req, res) => {
     /////Start
     let allProducts
     try {
-        allProducts = await database.sequelize.query("SELECT name, boughtYear, price, modal, location, color, userId, kmDriven, ownerShip, engineDisplacement, milage, category, wheelSize, isVerifiedByGarage, isDeleteByUser, isNegotiable, companyName, vehicleType, vehicleCategory, vehicleRunsOn FROM products JOIN vehicleCompanies ON products.companyId = vehicleCompanies.id JOIN vehiclecategories ON products.vehicleCategoryId = vehiclecategories.id JOIN enginedepedsons ON products.engineDepedsOnId = enginedepedsons.id ", {
+        allProducts = await database.sequelize.query("SELECT products.name, products.boughtYear, products.price, products.modal, products.location, products.color, products.userId, products.kmDriven, products.ownerShip, products.engineDisplacement, products.milage, products.category, products.wheelSize, products.isVerifiedByGarage, products.isDeleteByUser, products.isNegotiable, companyName, vehicleType, vehicleCategory, garadgeName, city, contact, firstName, lastName, vehicleRunsOn FROM products JOIN vehicleCompanies ON products.companyId = vehicleCompanies.id JOIN vehiclecategories ON products.vehicleCategoryId = vehiclecategories.id JOIN enginedepedsons ON products.engineDepedsOnId = enginedepedsons.id JOIN garages ON products.garageId = garages.id JOIN users on products.userId = users.id", {
             type: QueryTypes.SELECT,
         });
     } catch (error) {
