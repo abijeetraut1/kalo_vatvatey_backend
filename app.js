@@ -1,12 +1,12 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
-const session = require('express-session');
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const statusFunc = require("./utils/statusFunc")
 const bcrypt = require('bcrypt');
 const globalErrorHandler = require("./controller/globalErrorHandler");
+
 
 require("dotenv").config()
 const db = require("./model/index")
@@ -20,6 +20,10 @@ app.use(express.urlencoded({
     extended: true
 }));
 
+if(process.env.enviroment === "development"){
+
+    
+const session = require('express-session');
 app.use(session({
     secret: process.env.session_secret,
     resave: true,
@@ -114,6 +118,7 @@ app.get(
     }
 );
 
+}
 
 
 // Routers
