@@ -249,7 +249,6 @@ list.forEach(el => {
 
 const bikeCategory = [
     "super bike",
-    "super bike",
     "normal",
     "cruiser bike",
     "Naked bike",
