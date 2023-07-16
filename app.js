@@ -123,13 +123,18 @@ const adminRouter = require("./router/AdminRouter");
 const vehicleRouter = require("./router/vehicleFillupRoute");
 const garageRoute = require("./router/garageRouter");
 
+// const corsOptions = {
+//     origin: "*",
+//     optionsSuccessStatus: 200
+// }
+
 const corsOptions = {
-    origin: "*",
+    origin: "http://192.168.1.103" + port,
     optionsSuccessStatus: 200
 }
 
 app.use(cookieParser());
-app.use(cors("*"))
+app.use(cors(corsOptions))
 
 // page gateway
 app.use("/api/v1/user", userRouter);
