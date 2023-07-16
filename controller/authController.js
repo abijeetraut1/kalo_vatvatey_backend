@@ -48,7 +48,7 @@ exports.signup = catchAsync(async (req, res) => {
         firstName,
         lastName,
         email,
-        phoneno,
+        contact,
         password
     } = req.body;
 
@@ -58,17 +58,19 @@ exports.signup = catchAsync(async (req, res) => {
         return DetectEmptyForm(res, "lastName");
     else if (!email)
         return DetectEmptyForm(res, "Email");
-    else if (!phoneno)
-        return DetectEmptyForm(res, "phoneno");
+    else if (!contact)
+        return DetectEmptyForm(res, "contact");
     else if (!password)
         return DetectEmptyForm(res, "password");
 
 
     const checkAlreadyLogin = await user.findOne({
         where: {
-            email: req.body.email
+            email
         }
     })
+
+    console.log(checkAlreadyLogin)
 
     if (checkAlreadyLogin) {
         return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
@@ -76,11 +78,11 @@ exports.signup = catchAsync(async (req, res) => {
 
     const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
     const createUserAccount = await user.create({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        phone: req.body.phone,
-        password: await bcrypt.hash(req.body.password, 12),
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        contact: contact,
+        password: await bcrypt.hash(password, 12),
         role: "user",
         isVerified: false,
         verificationCode: code
