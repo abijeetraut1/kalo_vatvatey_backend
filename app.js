@@ -20,7 +20,7 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-if(process.env.enviroment === "development"){
+// if(process.env.enviroment === "development"){
 
     
     const session = require('express-session');
@@ -118,7 +118,7 @@ if(process.env.enviroment === "development"){
         }
     );
 
-}
+// }
 
 
 // Routers
