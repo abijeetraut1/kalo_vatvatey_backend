@@ -129,6 +129,14 @@ const corsOptions = {
 }
 
 app.use(cookieParser());
+app.use(cors("*"))
+
+// page gateway
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/products", productRouter);
+app.use("/api/v1/admin", adminRouter); // -> super admin pannel
+app.use("/vehicles", vehicleRouter);
+app.use("/api/v1/garage", garageRoute);
 
 // page gateway
 app.use("/api/v1/user", cors(corsOptions), userRouter);
