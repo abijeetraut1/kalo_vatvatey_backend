@@ -1,0 +1,81 @@
+// [[{
+//         "createdAt": "2023-06-24T19:14:30.335Z",
+//         "name": "Pants",
+//         "price": 92,
+//         "description": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+//         "shortDescription": "responsive",
+//         "year": "1957-12-03T07:20:42.623Z",
+//         "brand": "Donnelly - Kuhic",
+//         "id": "1"
+//     },
+//     {
+//         "createdAt": "2023-06-25T01:19:38.193Z",
+//         "name": "Pants",
+//         "price": 82,
+//         "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
+//         "shortDescription": "zero administration",
+//         "year": "1965-11-09T21:13:19.873Z",
+//         "brand": "Kertzmann and Sons",
+//         "id": "2"
+//     },
+//     {
+//         "createdAt": "2023-06-25T05:49:31.145Z",
+//         "name": "Pizza",
+//         "price": 28,
+//         "description": "The Apollotech B340 is an affordable wireless mouse with reliable connectivity, 12 months battery life and modern design",
+//         "shortDescription": "object-oriented",
+//         "year": "1992-08-20T08:59:31.092Z",
+//         "brand": "Heathcote, Koch and Parker",
+//         "id": "3"
+//     },
+//     {
+//         "createdAt": "2023-06-25T13:33:07.081Z",
+//         "name": "Chicken",
+//         "price": 8,
+//         "description": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+//         "shortDescription": "national",
+//         "year": "2005-01-22T09:05:59.202Z",
+//         "brand": "Bode - Haag",
+//         "id": "4"
+//     },
+//     {
+//         "createdAt": "2023-06-25T01:43:01.348Z",
+//         "name": "Fish",
+//         "price": 81,
+//         "description": "Andy shoes are designed to keeping in mind durability as well as trends, the most stylish range of shoes & sandals",
+//         "shortDescription": "fresh-thinking",
+//         "year": "1978-07-03T10:20:20.506Z",
+//         "brand": "Paucek LLC",
+//         "id": "5"
+//     },
+//     {
+//         "createdAt": "2023-06-25T09:06:54.109Z",
+//         "name": "Chips",
+//         "price": 37,
+//         "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+//         "shortDescription": "demand-driven",
+//         "year": "1985-12-20T22:35:23.817Z",
+//         "brand": "McLaughlin Inc",
+//         "id": "6"
+//     },
+//     {
+//         "createdAt": "2023-06-24T22:48:10.358Z",
+//         "name": "Gloves",
+//         "price": 9,
+//         "description": "Andy shoes are designed to keeping in mind durability as well as trends, the most stylish range of shoes & sandals",
+//         "shortDescription": "web-enabled",
+//         "year": "1987-03-22T08:10:54.070Z",
+//         "brand": "Kessler Inc",
+//         "id": "7"
+//     },
+//     {
+//         "createdAt": "2023-06-25T08:34:24.646Z",
+//         "name": "Mouse",
+//         "price": 50,
+//         "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+//         "shortDescription": "systemic",
+//         "year": "1965-12-03T00:48:23.022Z",
+//         "brand": "Waters Group",
+//         "id": "8"
+//     }]
+// ]
