@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer");
 const statusFunc = require("./statusFunc");
+const hbs = require("nodemailer-express-handlebars");
+const path = require('path');
 const EMAIL = process.env.MAIL_USERNAME;
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -8,15 +10,34 @@ const transporter = nodemailer.createTransport({
     pass: process.env.APP_PASSWORD,
   },
 });
+const handlebarOptions = {
+  viewEngine: {
+    partialsDir: path.resolve("./views/"),
+    defaultLayout: false,
+  },
+  viewPath: path.resolve("./views/"),
+};
 
-module.exports = async (res, sendTo, subject, text, html, message) => {
+// use a template file with nodemailer
+transporter.use("compile", hbs(handlebarOptions));
+
+module.exports = async (
+  res,
+  sendTo,
+  subject,
+  text,
+  template,
+  context,
+  message
+) => {
   try {
     const mailOptions = {
       from: `Kalo Vhatbatay <${EMAIL}>`,
       to: sendTo,
       subject: subject,
       text: text,
-      html: html, // this html code which is ejs format is not working but if we add directly html file over here it will work but if we do that the html file will not be dynamic
+      template: template,
+      context: context,
     };
     console.log(mailOptions);
     await transporter.sendMail(mailOptions);

@@ -160,7 +160,7 @@ exports.login = catchAsync(async (req, res) => {
         userSignin.email,
         code,
         otpToken,
-        (message = "email is not verifyed, please check your inbox!!")
+        "email is not verifyed, please check your inbox!!"
       );
     }
   }
@@ -191,7 +191,12 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
   });
 
   if (token) {
-    SendForgetPasswordTokenInEmail(findingUser.email, token);
+    SendForgetPasswordTokenInEmail(
+      res,
+      findingUser.email,
+      token,
+      "check your email inbox!!"
+    );
   }
 });
 

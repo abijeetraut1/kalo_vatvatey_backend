@@ -1,6 +1,5 @@
 const sendMain = require("../sendMail");
 const path = require("path");
-const ejs = require("ejs");
 
 const baseUrl = process.env.CORSORIGIN_URL;
 
@@ -11,22 +10,16 @@ const SendOtpCodeInEmail = (res, email, OTP, otpToken, message) => {
 
   const subject = "Verification Code from Kalo Vhatbatay";
   const text = `Your verification code is ${OTP}. Please enter this code to verify your account or clik this like ${url} to verify your email`;
-  const templatePath = path.join(__dirname, "views", "accountVerification.ejs");
 
   const chatUrl = `${baseUrl}/chat/tejkarki`;
 
-  // console.log("verifyemailUrl", url);
-  // console.log("chaturl", chatUrl);
-
-  const verifyEmailUrl = `${baseUrl}/verifyEmail/?token=${otpToken}&email=${email}`;
-
-  const html = ejs.renderFile(templatePath, {
+  const context = {
     OTP: OTP,
-    verifyEmailUrl: verifyEmailUrl,
+    verifyEmailUrl: url,
     chatUrl: chatUrl,
-  });
+  };
 
-  sendMain(res, email, subject, text, html, message);
+  sendMain(res, email, subject, text, "verifyEmail", context, message);
 };
 
 module.exports = SendOtpCodeInEmail;

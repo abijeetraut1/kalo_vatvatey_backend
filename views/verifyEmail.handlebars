@@ -8,7 +8,7 @@
 
 <body style="
       font-family: Arial, sans-serif;
-      height: 100dvh;
+      padding: 3rem 0.5rem;
       display: flex;
       line-height: 1.6;
       background-color: rgb(217, 223, 250);
@@ -35,7 +35,7 @@
           font-weight: bold;
           color: #fff;
         ">
-            <%= OTP %>
+            {{ OTP }}
         </div>
         <div>
             <div style="
@@ -59,16 +59,16 @@
           padding: 10px 20px;
           display: inline-block;
         ">
-            <a href="<% verifyEmailUrl %>"
+            <a href={{verifyEmailUrl}}
                 style="text-decoration: none; color: #fff; font-weight: bold">VERIFY MY EMAIL</a>
         </div>
         <p style="color: rgb(64, 80, 122); font-size: 14px; margin-top: 10px">
             Having trouble?
-            <a href="<%= chatUrl %>" target="_blank"
+            <a href={{ chatUrl }}target="_blank"
                 style="text-decoration: none; color: rgb(80, 107, 236)">@tejkarki</a>
         </p>
         <p style="color: rgb(64, 80, 122); font-size: 14px">
-            If you didn't sign up for YourWebsiteName, you can safely ignore this
+            If you didn't sign up for Kalo Vatvatey, you can safely ignore this
             email.
         </p>
     </div>

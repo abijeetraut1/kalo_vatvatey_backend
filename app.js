@@ -3,26 +3,22 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const statusFunc = require("./utils/statusFunc")
-const bcrypt = require('bcrypt');
+const statusFunc = require("./utils/statusFunc");
+const bcrypt = require("bcrypt");
 const globalErrorHandler = require("./controller/globalErrorHandler");
-const ejs = require('ejs');
-const path = require('path');
 
-require("dotenv").config()
-const db = require("./model/index")
-
+require("dotenv").config();
+const db = require("./model/index");
 
 const app = express();
 const port = 8000;
 
 app.use(express.json());
-app.use(express.urlencoded({
-    extended: true
-}));
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 // if(process.env.enviroment === "development"){
 // const session = require('express-session');
@@ -34,7 +30,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 // app.use(passport.initialize())
 // app.use(passport.session())
-
 
 // //Google Authentication
 // passport.serializeUser(function (user, cb) {
@@ -119,7 +114,6 @@ app.set('views', path.join(__dirname, 'views'));
 // );
 // }
 
-
 // Routers
 const userRouter = require("./router/userRouter");
 const productRouter = require("./router/productsRouter");
@@ -133,12 +127,12 @@ const garageRoute = require("./router/garageRouter");
 // }
 
 const corsOptions = {
-    origin: "*",
-    optionsSuccessStatus: 200
-}
+  origin: "*",
+  optionsSuccessStatus: 200,
+};
 
 app.use(cookieParser());
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 
 // page gateway
 app.use("/api/v1/user", userRouter);
@@ -155,12 +149,16 @@ app.use("/vehicles", cors(corsOptions), vehicleRouter);
 app.use("/api/v1/garage", cors(corsOptions), garageRoute);
 
 app.all("*", (req, res, next) => {
-    return statusFunc(res, 400, "Cannot Find The Page That You Are Searching For")
-})
+  return statusFunc(
+    res,
+    400,
+    "Cannot Find The Page That You Are Searching For"
+  );
+});
 
 // app.use(globalErrorHandler)
 
-// server 
+// server
 const server = app.listen(port, () => {
-    console.log("server is running at port : ", port);
-})
+  console.log("server is running at port : ", port);
+});
