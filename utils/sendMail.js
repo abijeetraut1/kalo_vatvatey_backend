@@ -16,7 +16,7 @@ module.exports = async (res, sendTo, subject, text, html, message) => {
       to: sendTo,
       subject: subject,
       text: text,
-      // html: html,
+      html: html, // this html code which is ejs format is not working but if we add directly html file over here it will work but if we do that the html file will not be dynamic
     };
     console.log(mailOptions);
     await transporter.sendMail(mailOptions);
