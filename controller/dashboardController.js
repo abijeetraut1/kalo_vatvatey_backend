@@ -38,7 +38,7 @@ exports.viewAllUser = async (req, res) => {
     const currentPage = 1;
     const allUsers = await user.findAll({
         attributes: {
-            exclude: ["password", "verificationCode", "isVerified", "createdAt", "updatedAt"]
+            exclude: ["password", "verificationCode" ]
         },
         limit: userLimit
     })
