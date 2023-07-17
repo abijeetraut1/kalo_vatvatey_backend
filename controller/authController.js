@@ -142,7 +142,7 @@ exports.login = catchAsync(async (req, res) => {
   );
 
   if (!isMatchPassword) {
-    return res.statusFunc(res, 401, "Wrong credentials!!");
+    return statusFunc(res, 401, "Wrong credentials!!");
   }
   if (userSignin.isVerified === false || userSignin.isVerified === 0) {
     // sendmail
