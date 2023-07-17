@@ -48,7 +48,7 @@ exports.signup = catchAsync(async (req, res) => {
         firstName,
         lastName,
         email,
-        phoneno,
+        contact,
         password
     } = req.body;
 
@@ -58,8 +58,8 @@ exports.signup = catchAsync(async (req, res) => {
         return DetectEmptyForm(res, "lastName");
     else if (!email)
         return DetectEmptyForm(res, "Email");
-    else if (!phoneno)
-        return DetectEmptyForm(res, "phoneno");
+    else if (!contact)
+        return DetectEmptyForm(res, "contact");
     else if (!password)
         return DetectEmptyForm(res, "password");
 
@@ -79,7 +79,7 @@ exports.signup = catchAsync(async (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        phone: req.body.phone,
+        contact: req.body.contact,
         password: await bcrypt.hash(req.body.password, 12),
         role: "user",
         isVerified: false,
