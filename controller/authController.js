@@ -14,8 +14,6 @@ const user = database.users;
 const createCookies = (res, status, userSignin) => {
     const token = jwt_signin(userSignin.id);
 
-    // cont 
-
     res.cookie('jwt', token, {
         maxAge: new Date(
             Date.now() + process.env.BROWSER_COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -24,7 +22,7 @@ const createCookies = (res, status, userSignin) => {
         secure: false
     });
     statusFunc(res, 201, {
-        message: `verification code was send to ${userSignin.email}`,
+        message: `Account created successfully!!`,
         token
     });
 }
@@ -105,7 +103,7 @@ exports.checkVerificationCode = catchAsync(async (req, res, next) => {
             }
         });
 
-        if (findUser.verificationCode === req.body.verificationCode) {
+        if (findUser.verificationCode === req.body.otp) {
             findUser.isVerified = 1 || true;
             findUser.verificationCode = undefined;
             findUser.save();
@@ -131,7 +129,7 @@ exports.login = catchAsync(async (req, res) => {
 
     if(userSignin.isVerified === false || userSignin.isVerified === 0) {
         // sendmail
-        return sendMail(req.body.email, code, verificatonLink, req.body.name);
+        return sendMail(req.body.email, userSignin.verificationCode, verificatonLink, req.body.name);
     }
 
     if (await bcrypt.compare(req.body.password, userSignin.password)) {

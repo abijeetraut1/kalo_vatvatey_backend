@@ -22,6 +22,7 @@ module.exports = async (sendTo, code, verificatonLink, name) => {
             `
         })
         console.log("verification code send");
+        res.status(201).json({message: "6"})
     } catch (err) {
         return statusFunc(res, 400, "too many request please try again later");
     }
