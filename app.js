@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const statusFunc = require("./utils/statusFunc")
 const bcrypt = require('bcrypt');
 const globalErrorHandler = require("./controller/globalErrorHandler");
-
+const ejs = require('ejs');
+const path = require('path');
 
 require("dotenv").config()
 const db = require("./model/index")
@@ -19,6 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // if(process.env.enviroment === "development"){
 // const session = require('express-session');

@@ -6,18 +6,19 @@ require("dotenv").config({
 const bcrypt = require('bcrypt');
 const catchAsync = require("../utils/catchAsync");
 const statusFunc = require("../utils/statusFunc");
-const sendMail = require("../utils/sendMail");
+const SendOtpCodeInEmail = require("../utils/EmailTemplate/SendOtpCodeInEmail");
+const SendForgetPasswordTokenInEmail = require("../utils/EmailTemplate/ForgotPassword");
 
 // deconstruction
 const user = database.users;
 
 const createCookies = (res, status, userSignin) => {
-    const token = jwt_signin(userSignin.id);
+    const tenMinutesInMilliseconds = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+    const token = jwt_signin(userSignin.id, tenMinutesInMilliseconds);
 
     res.cookie('jwt', token, {
-        maxAge: new Date(
-            Date.now() + process.env.BROWSER_COOKIES_EXPIRES_IN * 24 * 60 * 60 * 1000
-        ),
+        maxAge: tenMinutesInMilliseconds,
         httpOnly: true,
         secure: false
     });
@@ -27,11 +28,11 @@ const createCookies = (res, status, userSignin) => {
     });
 }
 
-const jwt_signin = (id) => {
+const jwt_signin = (id, expireTime) => {
     return jwt.sign({
-        id
+        id: id
     }, process.env.JWT_SECRET, {
-        expiresIn: process.env.COOKIE_EXPIRES_IN
+        expiresIn: expireTime
     })
 }
 
@@ -69,10 +70,12 @@ exports.signup = catchAsync(async (req, res) => {
     })
 
     if (checkAlreadyLogin) {
-        return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
+        return statusFunc(res, 409, "Email already registered"); // checks if the user already logged in
     }
 
-    const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
+
+
+
     const createUserAccount = await user.create({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -81,35 +84,52 @@ exports.signup = catchAsync(async (req, res) => {
         password: await bcrypt.hash(req.body.password, 12),
         role: "user",
         isVerified: false,
-        verificationCode: code
+        verificationCode: undefined
     })
-    const id = createUserAccount.id;
-    const verificatonLink = jwt.sign({
-        id,
-        code
-    }, process.env.JWT_VERIFICATION_SECRET, {
-        expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
-    })
-
 
     createCookies(res, 201, createUserAccount);
 })
 
 exports.checkVerificationCode = catchAsync(async (req, res, next) => {
-    if (req.body.verificationCode) {
+    const { OTP, email, otpToken } = req.body
+
+    if (!otpToken && OTP && OTP.length !== 6) {
+        return res.status(401).json({ message: "invalid otp!!" })
+    }
+
+    try {
         const findUser = await user.findOne({
             where: {
-                id: res.locals.userData.id
+                email: email
             }
         });
+        if (!findUser) {
+            return statusFunc(res, 404, "user not found!")
+        }
 
-        if (findUser.verificationCode === req.body.otp) {
+        if (otpToken) {
+            const decode = jwt.verify(otpToken, process.env.JWT_SECRET);
             findUser.isVerified = 1 || true;
             findUser.verificationCode = undefined;
             findUser.save();
-            return statusFunc(res, 200, "account verifined");
+            statusFunc(res, 200, "email verifined");
         } else {
-            return statusFunc(res, 200, "wrong verifincation code");
+            const decoded = jwt.verify(findUser.verificationCode, process.env.JWT_SECRET);
+            const decodeOTP = decoded.id
+            if (decodeOTP === OTP) {
+                findUser.isVerified = 1 || true;
+                findUser.verificationCode = undefined;
+                findUser.save();
+                statusFunc(res, 200, "email verifined");
+            } else {
+                return statusFunc(res, 400, "wrong verifincation code");
+            }
+        }
+    } catch (err) {
+        if (err.name === "TokenExpiredError") {
+            res.status(401).json({ message: "OTP code expired!!" })
+        } else {
+            res.status(400).json({ message: "invalid Otp code" })
         }
     }
 })
@@ -127,13 +147,18 @@ exports.login = catchAsync(async (req, res) => {
         return statusFunc(res, 404, "user not found! PEASE CREATE AN ACCOUNT");
     }
 
-    if(userSignin.isVerified === false || userSignin.isVerified === 0) {
+    if (userSignin.isVerified === false || userSignin.isVerified === 0) {
         // sendmail
-        return sendMail(req.body.email, userSignin.verificationCode, verificatonLink, req.body.name);
+        const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
+        const otpToken = jwt_signin(code, "1h")
+        if (otpToken) {
+            userSignin.verificationCode = otpToken
+            userSignin.save()
+            return SendOtpCodeInEmail(userSignin.email, code, otpToken, message = "email is not verifyed, please check your inbox!!",);
+        }
     }
 
     if (await bcrypt.compare(req.body.password, userSignin.password)) {
-        // userSignin.refreshToken = jwt.sign(userSignin, );
         createCookies(res, 200, userSignin);
     }
 })
@@ -142,56 +167,81 @@ exports.login = catchAsync(async (req, res) => {
 // FORGET PASSWORD
 exports.forgetPassword = catchAsync(async (req, res, next) => {
     const findingUser = await user.findOne({
-        email: req.body.email
-    })
+        where: {
+            email: req.body.email
+        }
+    });
 
     if (!findingUser) {
-        statusFunc(res, 404, "can't find user! please check your email once");
+        return statusFunc(res, 404, "Can't find user! Please check your email once.");
     }
-    let id = findingUser.id;
 
-    const token = jwt.sign({
-        id
-    }, process.env.JWT_SECRET, {
-        expiresIn: process.env.FORGET_PASSWORD_EXPIRES_AT
-    })
-    statusFunc(res, 201, token);
-})
+    const id = findingUser.id;
 
+    const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.FORGET_PASSWORD_EXPIRES_AT // Set a reasonable expiration time
+    });
 
+    if (token) {
+        SendForgetPasswordTokenInEmail(findingUser.email, token);
+    }
+});
 
-// RESET PASSWORD   
+// RESET PASSWORD
 exports.resetPassword = catchAsync(async (req, res, next) => {
-    try { // error handeling
-        console.log(req.params.token)
+    try {
         const forgetPSWuserId = jwt.verify(req.params.token, process.env.JWT_SECRET).id;
-        const resetUser = await user.findOne({
-            id: forgetPSWuserId
-        });
-        resetUser.password = await bcrypt.hash(req.body.password, 12);
-        resetUser.save();
-        statusFunc(res, 200, "password updated successfully");
 
+        const resetUser = await user.findOne({
+            where: {
+                id: forgetPSWuserId
+            }
+        });
+
+        if (!resetUser) {
+            return statusFunc(res, 404, "User not found");
+        }
+
+        resetUser.password = await bcrypt.hash(req.body.password, 12);
+        await resetUser.save();
+
+        statusFunc(res, 200, "Password updated successfully");
     } catch (err) {
-        statusFunc(res, 200, `error: ${err.message}`);
+        if (err.name === "TokenExpiredError") {
+            next(ERROR(403, "token expired!!"));
+        } else {
+            return statusFunc(res, 500, "Password update failed");
+        }
     }
-})
+});
+
 
 
 // update password
 exports.updatePassword = catchAsync(async (req, res, next) => {
-    const passportUpdateUser = await user.findOne({
+    const passwordUpdateUser = await user.findOne({
         where: {
             id: req.params.id
         }
     });
-    if (!(await bcrypt.compare(req.body.password, passportUpdateUser.password))) {
-        return statusFunc(res, 200, "password doesnot matched");
+
+    if (!passwordUpdateUser) {
+        return statusFunc(res, 404, "incorrecct password or userId");
     }
-    passportUpdateUser.password = await bcrypt.hash(req.body.passwordChange, 12);
-    passportUpdateUser.save();
-    statusFunc(res, 200, "password chagned successfully");
-})
+
+    const matchPassword = await bcrypt.compare(req.body.password, passwordUpdateUser.password);
+    if (!matchPassword) {
+        return statusFunc(res, 401, "Incorrect password!!");
+    }
+
+    const newPassword = await bcrypt.hash(req.body.newPassword, 12);
+
+    passwordUpdateUser.password = newPassword;
+    await passwordUpdateUser.save();
+
+    return statusFunc(res, 200, "Password changed successfully");
+});
+
 
 
 // check user is logged in or not
