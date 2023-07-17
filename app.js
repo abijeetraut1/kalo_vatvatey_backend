@@ -129,7 +129,7 @@ const garageRoute = require("./router/garageRouter");
 // }
 
 const corsOptions = {
-    origin: "http://192.168.1.103" + port,
+    origin: "*",
     optionsSuccessStatus: 200
 }
 
