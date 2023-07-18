@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-if (process.env.enviroment === "development") {
+if (process.env.ENVIROMENT === "development") {
     console.log("running on development");
     module.exports = {
         HOST: "localhost",
@@ -19,7 +19,7 @@ if (process.env.enviroment === "development") {
         }
     }
 
-} else if (process.env.enviroment === "production") {
+} else if (process.env.ENVIROMENT === "production") {
     console.log("running on prodction");
     module.exports = {
         HOST: process.env.DB_HOST,
