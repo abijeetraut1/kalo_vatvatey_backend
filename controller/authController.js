@@ -129,10 +129,10 @@ exports.login = catchAsync(async (req, res) => {
         return statusFunc(res, 404, "user not found! PEASE CREATE AN ACCOUNT");
     }
 
-    if(userSignin.isVerified === false || userSignin.isVerified === 0) {
-        // sendmail
-        return sendMail(req.body.email, code, verificatonLink, req.body.name);
-    }
+    // if(userSignin.isVerified === false || userSignin.isVerified === 0) {
+    //     // sendmail
+    //     return sendMail(req.body.email, code, verificatonLink, req.body.name);
+    // }
 
     if (await bcrypt.compare(req.body.password, userSignin.password)) {
         // userSignin.refreshToken = jwt.sign(userSignin, );
