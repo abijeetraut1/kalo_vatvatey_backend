@@ -28,7 +28,25 @@ const upload = {
     fileFilter: multerFilter
 }
 
+const extractorIdBySlug = async (model, field) => {
+    let searchedField;
+    if (model === "companyName") {
 
+        searchedField = await vehicleCompany.findOne({
+            where: {
+                companyName: field
+            }
+        })
+        return searchedField.id;
+    }else if(model === "vehicleCompany"){
+        searchedField = await vehicleCompany.findOne({
+            where: {
+                companyName: field
+            }
+        })
+        return searchedField.id;
+    }
+}
 
 exports.create_product = async (req, res) => {
     try {
@@ -37,15 +55,11 @@ exports.create_product = async (req, res) => {
             imagesName.push(ele.filename)
         });
 
-        const companyId = await vehicleCompany.findOne({
-            where: {
-                companyName: req.body.company
-            }
-        });
-        
+        // console.log(await extractorIdBySlug("companyName", req.body.company));
+
         const created_product = await product.create({
             name: req.body.name,
-            companyId: companyId.id, // will be remove  
+            companyId: 1, //await extractorIdBySlug("companyName", req.body.company)   
             boughtYear: req.body.year * 1, //
             price: req.body.price * 1, //
             modal: req.body.modal, //
