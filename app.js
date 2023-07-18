@@ -145,7 +145,7 @@ app.all("*", (req, res, next) => {
     return statusFunc(res, 400, "Cannot Find The Page That You Are Searching For")
 })
 
-// app.use(globalErrorHandler)
+app.use(globalErrorHandler)
 
 // server 
 const server = app.listen(port, () => {

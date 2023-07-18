@@ -24,7 +24,7 @@ router.get("/show_products/filter",
    
 );
 
-router.get("/show_one_product/:id",
+router.get("/show_one_product/:slug",
     productController.showone
 );
 
@@ -36,7 +36,7 @@ router.patch("/sold/:id",
 
 router.post("/create_products",
     authController.isLoggedIn,
-    // authController.givePermissionTo("seller"),P
+    // authController.givePermissionTo("seller"),
     upload.array("photo", 5),
     productController.create_product
 );
@@ -76,19 +76,19 @@ router.patch("/:id/review/update",
 
 
 // add to cart
-router.post("/addtocart/:productId",
-    authController.isLoggedIn,
-    authController.givePermissionTo("user"),
-    productController.addToCart
-);
+// router.post("/addtocart/:productId",
+//     authController.isLoggedIn,
+//     authController.givePermissionTo("user"),
+//     productController.addToCart
+// );
 
 
-// add to favourite 
-router.post("/favourite/:productId",
-    authController.isLoggedIn,
-    authController.givePermissionTo("user"),
-    productController.AddToFavourites
-)
+// // add to favourite 
+// router.post("/favourite/:productId",
+//     authController.isLoggedIn,
+//     authController.givePermissionTo("user"),
+//     productController.AddToFavourites
+// )
 
 
 // dashboard / tracker seller

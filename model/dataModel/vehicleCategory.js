@@ -5,6 +5,9 @@ module.exports = (sequelize, Sequelize) => {
         vehicleCategory:{
             type: Sequelize.STRING,
             allowNull: false
+        },
+        slug:{
+            type: Sequelize.STRING
         }
     });
 

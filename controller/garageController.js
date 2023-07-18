@@ -46,3 +46,13 @@ exports.displayOneGaradge = async (req, res, next) => {
 		garadge: findGaradge,
 	});
 };
+
+// exports.verifyByGarage = async(req, res) => {
+// 	const user = res.locals.user;
+// 	const tickVerified = await garadge.findOne({
+// 		where: {
+// 			id: user.garageId
+// 		}
+// 	})
+// 	res
+// }

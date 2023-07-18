@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         contact: {
             type: DataTypes.STRING,
         },
+        slug:{
+            type: DataTypes.STRING
+        }
     });
 
     return Garage;

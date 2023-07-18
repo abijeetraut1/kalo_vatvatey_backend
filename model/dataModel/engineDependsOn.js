@@ -4,7 +4,11 @@ module.exports = (sequelize, Sequelize) => {
     const engineDepends = sequelize.define("engineDepedsOn", {
         vehicleRunsOn: {
             type: Sequelize.STRING,
+        },
+        slug:{
+            type: Sequelize.STRING
         }
+
     })
     return engineDepends;
 }

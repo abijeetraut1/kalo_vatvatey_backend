@@ -70,7 +70,6 @@ exports.signup = catchAsync(async (req, res) => {
         }
     })
 
-    console.log(checkAlreadyLogin)
 
     if (checkAlreadyLogin) {
         return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
@@ -94,7 +93,6 @@ exports.signup = catchAsync(async (req, res) => {
     }, process.env.JWT_VERIFICATION_SECRET, {
         expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
     })
-
 
     createCookies(res, 201, createUserAccount);
 })

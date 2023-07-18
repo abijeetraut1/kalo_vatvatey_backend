@@ -9,6 +9,9 @@ module.exports = (sequelize, Sequelize) => {
         vehicleType:{
             type: Sequelize.STRING,
             allowNull: false
+        },
+        slug:{
+            type: Sequelize.STRING
         }
     })
     return brands;

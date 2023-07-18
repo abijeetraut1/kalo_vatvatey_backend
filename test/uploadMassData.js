@@ -211,7 +211,7 @@ const bike_list = [{
 ]
 
 
-// const engineDependsOn = require("../model/dataModel/engineDependsOn");
+// const engineDependsOnModel = require("../model/dataModel/engineDependsOn");
 const database = require("./../model/index");
 const scooty = database.brands;
 const engineDepends = database.engineDependsUpon;
@@ -221,17 +221,17 @@ const garage = database.garage;
 const uploadScooty = async (data, type) => {
     await scooty.create({
         companyName: data.company.toLowerCase(),
-        vehicleType: type
+        vehicleType: type,
+        slug: data.company.toUpperCase().replaceAll(" ", "-")
     })
 }
 
 const engineDependsOn = async (item) => {
     await engineDepends.create({
-        vehicleRunsOn: item
+        vehicleRunsOn: item,
+        slug: item.toUpperCase().replaceAll(" ", "-")
     })
 }
-
-
 
 scooty_list.forEach(ele => {
     uploadScooty(ele, "scooty");
@@ -287,7 +287,8 @@ const uploadGarage = async(el) => {
         garadgeName: el.name,
         location: el.location,
         city: el.city,
-        contact: el.contact
+        contact: el.contact,
+        slug: el.name.replaceAll(" ", "-")
     })
 }
 
@@ -298,7 +299,8 @@ linkedGarage.forEach(el => {
 
 const vehicleCate = async (el) => {
     await vehicleCategory.create({
-        vehicleCategory: el
+        vehicleCategory: el,
+        slug: el.replaceAll(" ", "-").toUpperCase()
     })
 }
 

@@ -81,7 +81,7 @@ db.garage.hasMany(db.products);
 db.products.belongsTo(db.garage);
 
 db.sequelize.sync({
-    force: true
+    force: false
 }).then(async () => {
     console.log("yes! sync done");
     await db.users.findOrCreate({

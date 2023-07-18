@@ -5,7 +5,7 @@ const {
 } = require("sequelize");
 const catchAsync = require('../utils/catchAsync');
 const database = require('./../model/index');
-const vehicleCompany = require("../model/dataModel/vehicleCompany");
+const vehicleCompany = database.brands;
 const product = database.products;
 const addToCart = database.addToCarts;
 const favourite = database.favourites;
@@ -37,40 +37,46 @@ exports.create_product = async (req, res) => {
             imagesName.push(ele.filename)
         });
 
+        const companyId = await vehicleCompany.findOne({
+            where: {
+                companyName: req.body.company
+            }
+        });
+        
         const created_product = await product.create({
             name: req.body.name,
-            companyId: req.body.company * 1,
-            boughtYear: req.body.year * 1,
-            price: req.body.price * 1,
-            description: req.body.description,
-            modal: req.body.modal,
+            companyId: companyId.id, // will be remove  
+            boughtYear: req.body.year * 1, //
+            price: req.body.price * 1, //
+            modal: req.body.modal, //
             images: imagesName,
             location: req.body.location,
-            shortDescription: req.body.shortDescription,
             userId: res.locals.userData.id,
             vehicleCompanyId: req.body.vehicleCompany * 1,
             color: req.body.color,
             kmDriven: req.body.kmDriven * 1,
             ownerShip: req.body.ownership * 1,
-            engineDisplacement: req.body.engineDisplacement * 1,
-            milage: req.body.milage * 1,
-            wheelSize: req.body.wheelsize * 1,
-            engineDepedsOnId: req.body.engineDependsUpon * 1,   // foreginKey
-            vehicleCategoryId: req.body.vehicleCategory * 1,    // foreginKey
-            garageId: req.body.garageId * 1,    // foreginKey
-            category: req.body.category,    // foreginKey
+            engine: req.body.engine * 1,
+            mileage: req.body.milage * 1,
+            engineDepedsOnId: req.body.engineDependsUpon * 1, // foreginKey
+            vehicleCategoryId: req.body.vehicleCategory * 1, // foreginKey
+            garageId: req.body.garageId * 1, // foreginKey
+            category: req.body.category, // foreginKey  //
             isSold: false,
+            break: req.body.break,
+            tireType: req.body.tireType,
             isDeleteByUser: false,
             isNegotiable: req.body.negotiable,
-            isVerifiedByGarage: "unchecked"
+            isVerifiedByGarage: "unchecked",
+            slug: req.body.name.replaceAll(" ", "-")
         })
         statusFunc(res, 201, created_product);
     } catch (err) {
         if (process.env.ENVIROMENT === "development") {
             statusFunc(res, 500, {
                 status: "failed",
-                message: `Please Insert: ${err.errors[0].path}`,
-                stack: err.stack
+                stack: err,
+                message: `Please Insert: ${err}`,
             });
         } else if (process.env.ENVIROMENT === "production") {
             statusFunc(res, 500, "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT");
@@ -121,7 +127,7 @@ exports.show_filter_product = catchAsync(async (req, res) => {
     }
 
     if (vehicleId !== undefined) {
-        if(vehicleId != ''){
+        if (vehicleId != '') {
             filter.vehicleCompanyId = vehicleId * 1;
         }
     }
@@ -158,7 +164,7 @@ exports.delete_products = catchAsync(async (req, res) => {
 exports.showone = catchAsync(async (req, res) => {
     const showone = await product.findOne({
         where: {
-            id: req.params.id
+            slug: req.params.slug
         }
     });
 
@@ -170,6 +176,7 @@ exports.showone = catchAsync(async (req, res) => {
 })
 
 // update product
+// need to be updated
 exports.update_products = catchAsync(async (req, res) => {
     const {
         name,
@@ -179,7 +186,7 @@ exports.update_products = catchAsync(async (req, res) => {
         price,
         modal
     } = req.body;
-    
+
     const update_product = await product.findOne({
         where: {
             id: req.params.id
@@ -203,47 +210,47 @@ exports.update_products = catchAsync(async (req, res) => {
 
 
 // add to cart
-exports.addToCart = catchAsync(async (req, res) => {
-    console.log("user" + res.locals.userData.id, " product " + req.params.productId);
+// exports.addToCart = catchAsync(async (req, res) => {
+//     console.log("user" + res.locals.userData.id, " product " + req.params.productId);
 
-    const checkCart = await addToCart.findOne({
-        where: {
-            userId: res.locals.userData.id,
-            productId: req.params.productId * 1
-        }
-    })
+//     const checkCart = await addToCart.findOne({
+//         where: {
+//             userId: res.locals.userData.id,
+//             productId: req.params.productId * 1
+//         }
+//     })
 
-    if (checkCart) {
-        return statusFunc(res, 403, "already added in cart");
-    }
+//     if (checkCart) {
+//         return statusFunc(res, 403, "already added in cart");
+//     }
 
-    const add_to_cart = await addToCart.create({
-        userId: res.locals.userData.id,
-        productId: req.params.productId * 1
-    })
+//     const add_to_cart = await addToCart.create({
+//         userId: res.locals.userData.id,
+//         productId: req.params.productId * 1
+//     })
 
-    statusFunc(res, 201, add_to_cart);
-})
+//     statusFunc(res, 201, add_to_cart);
+// })
 
-exports.AddToFavourites = catchAsync(async (req, res) => {
-    const checkFavourite = await favourite.findOne({
-        where: {
-            userId: res.locals.userData.id,
-            productId: req.params.id
-        }
-    })
+// exports.AddToFavourites = catchAsync(async (req, res) => {
+//     const checkFavourite = await favourite.findOne({
+//         where: {
+//             userId: res.locals.userData.id,
+//             productId: req.params.id
+//         }
+//     })
 
-    if (checkFavourite) {
-        return statusFunc(res, 403, "already added in favourite");
-    }
+//     if (checkFavourite) {
+//         return statusFunc(res, 403, "already added in favourite");
+//     }
 
-    const add_favourite = await favourite.create({
-        userId: res.locals.userData.id,
-        productId: req.params.id
-    })
+//     const add_favourite = await favourite.create({
+//         userId: res.locals.userData.id,
+//         productId: req.params.id
+//     })
 
-    statusFunc(res, 201, add_favourite)
-})
+//     statusFunc(res, 201, add_favourite)
+// })
 
 
 exports.searchProducts = catchAsync(async (req, res, next) => {
