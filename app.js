@@ -132,7 +132,7 @@ const corsOptions = {
 };
 
 app.use(cookieParser());
-app.use(cors(corsOptions));
+app.use(cors());
 
 // page gateway
 app.use("/api/v2/user", userRouter);
