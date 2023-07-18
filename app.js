@@ -135,11 +135,11 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 
 // page gateway
-app.use("/api/v1/user", userRouter);
-app.use("/api/v1/products", productRouter);
-app.use("/api/v1/admin", adminRouter); // -> super admin pannel
+app.use("/api/v2/user", userRouter);
+app.use("/api/v2/products", productRouter);
+app.use("/api/v2/admin", adminRouter); // -> super admin pannel
 app.use("/vehicles", vehicleRouter);
-app.use("/api/v1/garage", garageRoute);
+app.use("/api/v2/garage", garageRoute);
 
 // page gateway
 app.use("/api/v1/user", cors(corsOptions), userRouter);
