@@ -73,26 +73,26 @@ exports.signup = catchAsync(async (req, res) => {
 
     if (checkAlreadyLogin) {
         return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
+    } else {
+        const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
+        const createUserAccount = await user.create({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            contact: contact,
+            password: await bcrypt.hash(password, 12),
+            role: "user",
+            isVerified: false,
+            verificationCode: code
+        })
+        const id = createUserAccount.id;
+        const verificatonLink = jwt.sign({
+            id,
+            code
+        }, process.env.JWT_VERIFICATION_SECRET, {
+            expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
+        })
     }
-
-    const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
-    const createUserAccount = await user.create({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        contact: contact,
-        password: await bcrypt.hash(password, 12),
-        role: "user",
-        isVerified: false,
-        verificationCode: code
-    })
-    const id = createUserAccount.id;
-    const verificatonLink = jwt.sign({
-        id,
-        code
-    }, process.env.JWT_VERIFICATION_SECRET, {
-        expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
-    })
 
     createCookies(res, 201, createUserAccount);
 })
