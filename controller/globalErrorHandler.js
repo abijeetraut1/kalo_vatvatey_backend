@@ -33,6 +33,5 @@ module.exports = (err, req, res, next) => {
             })
         }
     }
-    console.log("err.name", err)
-    next();
+    console.log(err);
 }
