@@ -3,6 +3,7 @@ require('dotenv').config();
 
 module.exports = (err, req, res, next) => {
     if (process.env.enviroment === "production") {
+        console.log("error in production");
         if (err.name === "SyntaxError") {
             return statusFunc(res, 500, "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT COUPLE OF MINUTES")
         }else if(err.name === 'JsonWebTokenError'){
@@ -14,6 +15,7 @@ module.exports = (err, req, res, next) => {
         }
 
     } else if (process.env.enviroment === "development") {
+        console.log("error in development");
         if (
             err.name === "SyntaxError" ||
             err.name === 'JsonWebTokenError' ||
