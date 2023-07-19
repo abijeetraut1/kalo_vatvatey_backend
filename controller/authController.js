@@ -70,31 +70,34 @@ exports.signup = catchAsync(async (req, res) => {
         }
     })
 
+    console.log(checkAlreadyLogin);
 
     if (checkAlreadyLogin) {
         return statusFunc(res, 404, "user already signup with that email"); // checks if the user already logged in
+    } else {
+
+        const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
+        const createUserAccount = await user.create({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            contact: contact,
+            password: await bcrypt.hash(password, 12),
+            role: "user",
+            isVerified: false,
+            verificationCode: code
+        })
+
+        const id = createUserAccount.id;
+        const verificatonLink = jwt.sign({
+            id,
+            code
+        }, process.env.JWT_VERIFICATION_SECRET, {
+            expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
+        })
+
+        createCookies(res, 201, createUserAccount);
     }
-
-    const code = Math.floor(Math.random() * (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) + process.env.MIN_GENERATION);
-    const createUserAccount = await user.create({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        contact: contact,
-        password: await bcrypt.hash(password, 12),
-        role: "user",
-        isVerified: false,
-        verificationCode: code
-    })
-    const id = createUserAccount.id;
-    const verificatonLink = jwt.sign({
-        id,
-        code
-    }, process.env.JWT_VERIFICATION_SECRET, {
-        expiresIn: process.env.JWT_VERIFICATION_EXPIRESIN
-    })
-
-    createCookies(res, 201, createUserAccount);
 })
 
 exports.checkVerificationCode = catchAsync(async (req, res, next) => {
@@ -129,7 +132,7 @@ exports.login = catchAsync(async (req, res) => {
         return statusFunc(res, 404, "user not found! PEASE CREATE AN ACCOUNT");
     }
 
-    if(userSignin.isVerified === false || userSignin.isVerified === 0) {
+    if (userSignin.isVerified === false || userSignin.isVerified === 0) {
         // sendmail
         return sendMail(req.body.email, code, verificatonLink, req.body.name);
     }
