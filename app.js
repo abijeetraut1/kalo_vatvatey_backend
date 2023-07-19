@@ -159,6 +159,6 @@ app.all("*", (req, res, next) => {
 // app.use(globalErrorHandler)
 
 // server
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log("server is running at port : ", port);
 });

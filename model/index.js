@@ -15,7 +15,7 @@ const sequelize = new Sequelize(DBconfig.db, DBconfig.USER, DBconfig.PASS, {
     operatirAlias: false,
     loggin: false,
     port: DBconfig.POST,
-    pool: {
+    pool: { 
         max: DBconfig.max,
         min: DBconfig.min,
         accurate: DBconfig.accurate,

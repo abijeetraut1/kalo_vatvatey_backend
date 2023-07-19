@@ -24,7 +24,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN   
         },
         verificationCode:{
-            type: Sequelize.INTEGER
+            type: Sequelize.STRING
         }
 
     })

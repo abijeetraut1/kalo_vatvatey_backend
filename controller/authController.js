@@ -81,47 +81,71 @@ exports.signup = catchAsync(async (req, res) => {
 exports.checkVerificationCode = catchAsync(async (req, res, next) => {
   const { OTP, email, otpToken } = req.body;
 
-  if (!otpToken && OTP && OTP.length !== 6) {
-    return res.status(401).json({ message: "invalid otp!!" });
-  }
-
-  try {
-    const findUser = await user.findOne({
-      where: {
-        email: email,
-      },
+  const findUserByEmail = async (email) => {
+    return await user.findOne({
+      where: { email },
     });
-    if (!findUser) {
-      return statusFunc(res, 404, "user not found!");
-    }
+  };
+  const verifyOTP = async (user, token) => {
+    try {
+      console.log(user.verificationCode);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const verificationCode = decoded.code;
 
-    if (otpToken) {
-      const decode = jwt.verify(otpToken, process.env.JWT_SECRET);
-      findUser.isVerified = 1 || true;
-      findUser.verificationCode = undefined;
-      findUser.save();
-      statusFunc(res, 200, "email verifined");
-    } else {
-      const decoded = jwt.verify(
-        findUser.verificationCode,
-        process.env.JWT_SECRET
-      );
-      const decodeOTP = decoded.id;
-      if (decodeOTP === OTP) {
-        findUser.isVerified = 1 || true;
-        findUser.verificationCode = undefined;
-        findUser.save();
-        statusFunc(res, 200, "email verifined");
+      if (verificationCode == OTP) {
+        user.isVerified = true;
+        user.verificationCode = undefined;
+        await user.save();
+        return statusFunc(res, 200, "email verified");
       } else {
-        return statusFunc(res, 400, "wrong verifincation code");
+        return statusFunc(res, 400, "invalid OTP !!");
+      }
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        return res.status(401).json({ message: "OTP code expired!!" });
+      } else {
+        return res.status(400).json({ message: "invalid OTP code!!" });
       }
     }
-  } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      res.status(401).json({ message: "OTP code expired!!" });
-    } else {
-      res.status(400).json({ message: "invalid Otp code" });
+  };
+
+  if (otpToken) {
+    try {
+      const decodedToken = jwt.verify(otpToken, process.env.JWT_SECRET);
+      const userEmail = decodedToken.email;
+      const foundUser = await findUserByEmail(userEmail);
+
+      if (!foundUser) return statusFunc(res, 404, "user not found!!!");
+
+      if (otpToken !== foundUser.verificationCode)
+        return statusFunc(res, 401, "invalid token");
+
+      foundUser.isVerified = true;
+      foundUser.verificationCode = undefined;
+      await foundUser.save();
+      return statusFunc(res, 200, "email verified");
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        return res.status(401).json({ message: "OTP code expired!!!" });
+      }
     }
+  } else if (OTP) {
+    if (!email) return statusFunc(res, 400, "email is required!!");
+
+    if (OTP.length !== 6)
+      return res.status(401).json({ message: "invalid OTP length!!" });
+
+    try {
+      const foundUser = await findUserByEmail(email);
+
+      if (!foundUser) return statusFunc(res, 404, "user not found!!");
+
+      await verifyOTP(foundUser, foundUser.verificationCode);
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    statusFunc(res, 400, "OTP verification code is required!");
   }
 });
 
@@ -151,9 +175,19 @@ exports.login = catchAsync(async (req, res) => {
         (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) +
         process.env.MIN_GENERATION
     );
-    const otpToken = jwt_signin(code, "1h");
+    const otpToken = jwt.sign(
+      {
+        code,
+        email: userSignin.email,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+
     if (otpToken) {
-      userSignin.verificationCode = code;
+      userSignin.verificationCode = otpToken;
       userSignin.save();
       return SendOtpCodeInEmail(
         res,
@@ -187,7 +221,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
   const id = findingUser.id;
 
   const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.FORGET_PASSWORD_EXPIRES_AT, // Set a reasonable expiration time
+    expiresIn: "1h", // Set a reasonable expiration time
   });
 
   if (token) {
@@ -202,11 +236,14 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 
 // RESET PASSWORD
 exports.resetPassword = catchAsync(async (req, res, next) => {
+  const { token } = req.query;
+  const { password } = req.body;
+  if (!token)
+    return res.status(400).json({ message: "there is no token in query" });
+  if (!password)
+    return res.status(400).json({ message: "enter your new password!" });
   try {
-    const forgetPSWuserId = jwt.verify(
-      req.params.token,
-      process.env.JWT_SECRET
-    ).id;
+    const forgetPSWuserId = jwt.verify(token, process.env.JWT_SECRET).id;
 
     const resetUser = await user.findOne({
       where: {
@@ -218,13 +255,13 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
       return statusFunc(res, 404, "User not found");
     }
 
-    resetUser.password = await bcrypt.hash(req.body.password, 12);
+    resetUser.password = await bcrypt.hash(password, 12);
     await resetUser.save();
 
     statusFunc(res, 200, "Password updated successfully");
   } catch (err) {
     if (err.name === "TokenExpiredError") {
-      next(ERROR(403, "token expired!!"));
+      return statusFunc(res, 403, "token expired!!");
     } else {
       return statusFunc(res, 500, "Password update failed");
     }

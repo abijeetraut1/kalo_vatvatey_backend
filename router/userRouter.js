@@ -6,8 +6,6 @@ router.post("/signup", userController.signup);
 
 router.post("/login", userController.login);
 router.get("/verification",
-    userController.isLoggedIn,
-    userController.givePermissionTo("user"),
     userController.checkVerificationCode
 );
 
@@ -19,7 +17,7 @@ router.patch("/change_role",
 );
 
 router.post('/forgetPassword', userController.forgetPassword);
-router.post("/resetPassword/:token", userController.resetPassword);
+router.post("/resetPassword", userController.resetPassword);
 router.patch("/update_password/:id", userController.updatePassword);
 
 
