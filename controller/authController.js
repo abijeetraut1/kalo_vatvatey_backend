@@ -160,24 +160,34 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
     statusFunc(res, 201, token);
 })
 
-
-
 // RESET PASSWORD   
 exports.resetPassword = catchAsync(async (req, res, next) => {
     try { // error handeling
-        console.log(req.params.token)
+        const {
+            oldPassword,
+            newPassword
+        } = req.body;
+
         const forgetPSWuserId = jwt.verify(req.params.token, process.env.JWT_SECRET).id;
         const resetUser = await user.findOne({
-            id: forgetPSWuserId
+            where: {
+                id: forgetPSWuserId
+            }
         });
-        resetUser.password = await bcrypt.hash(req.body.password, 12);
-        resetUser.save();
-        statusFunc(res, 200, "password updated successfully");
 
+        if (!(await bcrypt.compare(oldPassword, resetUser.password))) {
+            return statusFunc(res, 400, "password doesnot match");
+        }
+
+        resetUser.password = await bcrypt.hash(newPassword, 12);
+        resetUser.save();
+
+        statusFunc(res, 200, "password updated successfully");
     } catch (err) {
         statusFunc(res, 200, `error: ${err.message}`);
     }
 })
+
 
 
 // update password
