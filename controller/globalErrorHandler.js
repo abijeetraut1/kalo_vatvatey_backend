@@ -2,7 +2,7 @@ const statusFunc = require("../utils/statusFunc")
 require('dotenv').config();
 
 module.exports = (err, req, res, next) => {
-    if (process.env.enviroment === "production") {
+    if (process.env.ENVIROMENT === "production") {
         if (err.name === "SyntaxError") {
             return statusFunc(res, 500, "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT COUPLE OF MINUTES")
         }else if(err.name === 'JsonWebTokenError'){
@@ -13,7 +13,7 @@ module.exports = (err, req, res, next) => {
             return statusFunc(res, 400, `forgot to add field: ${err.errors[0].path}`)
         }
 
-    } else if (process.env.enviroment === "development") {
+    } else if (process.env.ENVIROMENT === "development") {
         if (
             err.name === "SyntaxError" ||
             err.name === 'JsonWebTokenError' ||
