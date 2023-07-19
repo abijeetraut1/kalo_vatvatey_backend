@@ -128,14 +128,18 @@ exports.login = catchAsync(async (req, res) => {
         }
     })
 
+    console.log(userSignin)
+
     if (userSignin === null) {
         return statusFunc(res, 404, "user not found! PEASE CREATE AN ACCOUNT");
     }
 
-    if (userSignin.isVerified === false || userSignin.isVerified === 0) {
-        // sendmail
-        return sendMail(req.body.email, code, verificatonLink, req.body.name);
-    }
+
+    // neeed to fix this
+    // if (userSignin.isVerified === false || userSignin.isVerified === 0) {
+    //     // sendmail
+    //     return sendMail(req.body.email, code, verificatonLink, req.body.name);
+    // }
 
     if (await bcrypt.compare(req.body.password, userSignin.password)) {
         // userSignin.refreshToken = jwt.sign(userSignin, );
@@ -147,7 +151,9 @@ exports.login = catchAsync(async (req, res) => {
 // FORGET PASSWORD
 exports.forgetPassword = catchAsync(async (req, res, next) => {
     const findingUser = await user.findOne({
-        email: req.body.email
+        where: {
+            email: req.body.email
+        }
     })
 
     if (!findingUser) {
@@ -168,13 +174,25 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 // RESET PASSWORD   
 exports.resetPassword = catchAsync(async (req, res, next) => {
     try { // error handeling
-        console.log(req.params.token)
+        const {
+            oldPassword,
+            newPassword
+        } = req.body;
+
         const forgetPSWuserId = jwt.verify(req.params.token, process.env.JWT_SECRET).id;
         const resetUser = await user.findOne({
-            id: forgetPSWuserId
+            where: {
+                id: forgetPSWuserId
+            }
         });
-        resetUser.password = await bcrypt.hash(req.body.password, 12);
+
+        if (!(await bcrypt.compare(oldPassword, resetUser.password))) {
+            return statusFunc(res, 400, "password doesnot match");
+        }
+
+        resetUser.password = await bcrypt.hash(newPassword, 12);
         resetUser.save();
+
         statusFunc(res, 200, "password updated successfully");
 
     } catch (err) {
