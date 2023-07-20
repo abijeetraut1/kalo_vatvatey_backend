@@ -101,7 +101,7 @@ exports.create_product = async (req, res) => {
             isDeleteByUser: false,
             isNegotiable: req.body.negotiable,
             isVerifiedByGarage: "unchecked",
-            slug: req.body.name.trim().replaceAll(" ", "-")
+            slug: req.body.name.trim().replaceAll(" ", "-").Date.now()
         })
 
         console.log(created_product);

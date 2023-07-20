@@ -4,7 +4,7 @@ const path = require("path");
 const baseUrl = process.env.CORSORIGIN_URL;
 
 const SendOtpCodeInEmail = (res, email, OTP, otpToken, message) => {
-  const url = new URL(`${baseUrl}/verifyEmail`);
+  const url = new URL(`${baseUrl}/verifyEmail`);  
   url.searchParams.set("token", otpToken);
   url.searchParams.set("email", email);
 

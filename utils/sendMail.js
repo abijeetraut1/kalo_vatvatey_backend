@@ -39,7 +39,7 @@ module.exports = async (
       template: template,
       context: context,
     };
-    console.log(mailOptions);
+    // console.log(mailOptions);
     await transporter.sendMail(mailOptions);
     console.log("email send");
     res.status(201).json({ message });

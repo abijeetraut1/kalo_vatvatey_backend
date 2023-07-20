@@ -24,6 +24,7 @@ const createCookies = (res, status, userSignin) => {
   });
   statusFunc(res, 201, {
     message: `Account created successfully!!`,
+    token
   });
 };
 
@@ -88,7 +89,6 @@ exports.checkVerificationCode = catchAsync(async (req, res, next) => {
   };
   const verifyOTP = async (user, token) => {
     try {
-      console.log(user.verificationCode);
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const verificationCode = decoded.code;
 
@@ -175,6 +175,8 @@ exports.login = catchAsync(async (req, res) => {
         (process.env.MAX_GENERATION - process.env.MIN_GENERATION + 1) +
         process.env.MIN_GENERATION
     );
+
+    console.log(code);
     const otpToken = jwt.sign(
       {
         code,
