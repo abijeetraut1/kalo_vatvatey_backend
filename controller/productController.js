@@ -8,7 +8,8 @@ const database = require('./../model/index');
 const vehicleCompany = database.brands;
 const product = database.products;
 const addToCart = database.addToCarts;
-const favourite = database.favourites;
+const engineDepedsOn = database.engineDependsUpon;
+
 const statusFunc = require("./../utils/statusFunc");
 
 const multerStorage = multer.memoryStorage();
@@ -31,38 +32,55 @@ const upload = {
 const extractorIdBySlug = async (model, field) => {
     let searchedField;
     if (model === "companyName") {
-
         searchedField = await vehicleCompany.findOne({
             where: {
                 companyName: field
             }
         })
-        return searchedField.id;
-    }else if(model === "vehicleCompany"){
+    } else if (model === "vehicleCompany") {
         searchedField = await vehicleCompany.findOne({
             where: {
                 companyName: field
             }
         })
-        return searchedField.id;
+    } else if (model === "engineRunsOn") {
+        searchedField = await engineDepedsOn.findOne({
+            where: {
+                vehicleRunsOn: field
+            }
+        })
+    } else if (model === "vehicleCategory") {
+        searchedField = await database.vehicleCategory.findOne({
+            where: {
+                vehicleCategory: field
+            }
+        })
+    } else if (model === "garage") {
+        searchedField = await database.garage.findOne({
+            where: {
+                garadgeName: field
+            }
+        })
     }
+    return searchedField.id;
 }
 
 exports.create_product = async (req, res) => {
+    console.log(req.body.name.replaceAll(" ", "-"))
     try {
         const imagesName = [];
         req.files.forEach(ele => {
             imagesName.push(ele.filename)
         });
 
-        // console.log(await extractorIdBySlug("companyName", req.body.company));
+        console.log(await extractorIdBySlug("companyName", req.body.company));
 
         const created_product = await product.create({
-            name: req.body.name,
-            companyId: 1, //await extractorIdBySlug("companyName", req.body.company)   
-            boughtYear: req.body.year * 1, //
-            price: req.body.price * 1, //
-            modal: req.body.modal, //
+            name: req.body.name.trim(),
+            companyId: await extractorIdBySlug("companyName", req.body.company),
+            boughtYear: req.body.year * 1,
+            price: req.body.price * 1,
+            modal: req.body.modal,
             images: imagesName,
             location: req.body.location,
             userId: res.locals.userData.id,
@@ -72,18 +90,19 @@ exports.create_product = async (req, res) => {
             ownerShip: req.body.ownership * 1,
             engine: req.body.engine * 1,
             mileage: req.body.milage * 1,
-            engineDepedsOnId: req.body.engineDependsUpon * 1, // foreginKey
-            vehicleCategoryId: req.body.vehicleCategory * 1, // foreginKey
-            garageId: req.body.garageId * 1, // foreginKey
-            category: req.body.category, // foreginKey  //
+            engineDepedsOnId: await extractorIdBySlug("engineRunsOn", req.body.engineDependsUpon), // foreginKey
+            vehicleCategoryId: await extractorIdBySlug("vehicleCategory", req.body.vehicleCategory), // foreginKey
+            garageId: await extractorIdBySlug("garage", req.body.garage), // foreginKey
             isSold: false,
             break: req.body.break,
             tireType: req.body.tireType,
             isDeleteByUser: false,
             isNegotiable: req.body.negotiable,
             isVerifiedByGarage: "unchecked",
-            slug: req.body.name.replaceAll(" ", "-")
+            slug: req.body.name.trim().replaceAll(" ", "-")
         })
+
+        console.log(created_product);
         statusFunc(res, 201, created_product);
     } catch (err) {
         if (process.env.ENVIROMENT === "development") {
@@ -93,7 +112,10 @@ exports.create_product = async (req, res) => {
                 message: `Please Insert: ${err}`,
             });
         } else if (process.env.ENVIROMENT === "production") {
-            statusFunc(res, 500, "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT");
+            statusFunc(res, 500, {
+                msg: "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT",
+                err
+            });
         }
     }
 }

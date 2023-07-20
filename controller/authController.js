@@ -203,15 +203,20 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 // update password
 exports.updatePassword = catchAsync(async (req, res, next) => {
+    const { newPassword, oldPassword } = req.body;
+    const userId = res.locals.userData;
+    console.log(userId);
+
     const passportUpdateUser = await user.findOne({
         where: {
-            id: req.params.id
+            id: userId
         }
     });
-    if (!(await bcrypt.compare(req.body.password, passportUpdateUser.password))) {
+
+    if (!(await bcrypt.compare(passportUpdateUser.passsword, oldPassword))) {
         return statusFunc(res, 200, "password doesnot matched");
     }
-    passportUpdateUser.password = await bcrypt.hash(req.body.passwordChange, 12);
+    passportUpdateUser.password = await bcrypt.hash(newPassword, 12);
     passportUpdateUser.save();
     statusFunc(res, 200, "password chagned successfully");
 })
@@ -246,7 +251,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
     next();
 });
 
-// change role
+// // change role
 exports.changeRole = catchAsync(async (req, res) => {
     const userTochangeRole = await user.findOne({
         where: {

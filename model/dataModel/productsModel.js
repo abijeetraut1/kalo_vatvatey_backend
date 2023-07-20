@@ -46,15 +46,11 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             // allowNull: false
         },
-        engine: {           // vehicle cc's (kati cc ko gadi ho) 
+        engine: {                       // vehicle cc's (kati cc ko gadi ho) 
             type: Sequelize.INTEGER,
             // allowNull: false
         },
-        mileage: {                       // kati ko milage dinxa uploaded vehicle le
-            type: Sequelize.STRING,
-            // allowNull: false
-        },
-        category: {                     // kun category ko gadi ho eg: Naked, Normal, Sports
+        mileage: {                      // kati ko milage dinxa uploaded vehicle le
             type: Sequelize.STRING,
             // allowNull: false
         },
@@ -80,7 +76,6 @@ module.exports = (sequelize, Sequelize) => {
         },
         slug:{
             type: Sequelize.STRING,
-            allowNull: false
         }
     })
 
