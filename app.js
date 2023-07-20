@@ -31,7 +31,6 @@ app.use(express.urlencoded({
 // app.use(passport.initialize())
 // app.use(passport.session())
 
-
 // //Google Authentication
 // passport.serializeUser(function (user, cb) {
 //     cb(null, user);
@@ -117,7 +116,6 @@ app.use(express.urlencoded({
 // );
 // }
 
-
 // Routers
 const userRouter = require("./router/userRouter");
 const productRouter = require("./router/productsRouter");
@@ -131,7 +129,7 @@ const corsOptions = {
 }
 
 app.use(cookieParser());
-app.use(cors(corsOptions))
+app.use(cors())
 
 
 // page gateway

@@ -10,6 +10,7 @@ const product = database.products;
 const addToCart = database.addToCarts;
 const engineDepedsOn = database.engineDependsUpon;
 
+const favourite = database.favourites;
 const statusFunc = require("./../utils/statusFunc");
 
 const multerStorage = multer.memoryStorage();
@@ -65,8 +66,9 @@ const extractorIdBySlug = async (model, field) => {
     return searchedField.id;
 }
 
+
+
 exports.create_product = async (req, res) => {
-    console.log(req.body.name.replaceAll(" ", "-"))
     try {
         const imagesName = [];
         req.files.forEach(ele => {
@@ -222,7 +224,6 @@ exports.update_products = catchAsync(async (req, res) => {
         price,
         modal
     } = req.body;
-
     const update_product = await product.findOne({
         where: {
             id: req.params.id

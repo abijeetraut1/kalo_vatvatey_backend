@@ -54,5 +54,4 @@ exports.displayOneGaradge = async (req, res, next) => {
 // 			id: user.garageId
 // 		}
 // 	})
-// 	res
 // }
