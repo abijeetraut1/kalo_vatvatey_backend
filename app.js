@@ -122,7 +122,7 @@ const vehicleRouter = require("./router/vehicleFillupRoute");
 const garageRoute = require("./router/garageRouter");
 
 const corsOptions = {
-  origin: process.env.CORSORIGIN_URL,
+  origin: process.env.CORSORIGIN_URL || "http://localhost:3000",
   optionsSuccessStatus: 200,
 };
 
