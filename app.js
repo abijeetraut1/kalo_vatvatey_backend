@@ -3,24 +3,24 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const statusFunc = require("./utils/statusFunc")
-const bcrypt = require('bcrypt');
+const statusFunc = require("./utils/statusFunc");
+const bcrypt = require("bcrypt");
 const globalErrorHandler = require("./controller/globalErrorHandler");
 
-
-require("dotenv").config()
-const db = require("./model/index")
-
+require("dotenv").config();
+const db = require("./model/index");
 
 const app = express();
 const port = 8000;
 
 app.use(express.json());
-app.use(express.urlencoded({
-    extended: true
-}));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-// if(process.env.enviroment === "development"){    
+// if(process.env.enviroment === "development"){
 // const session = require('express-session');
 // app.use(session({
 //     secret: process.env.session_secret,
@@ -78,8 +78,6 @@ app.use(express.urlencoded({
 //         });
 //         let token;
 
-
-
 //         if (findUserByEmail.length > 0) {
 //             token = jwt.sign({
 //                 id: findUserByEmail[0].id
@@ -124,13 +122,12 @@ const vehicleRouter = require("./router/vehicleFillupRoute");
 const garageRoute = require("./router/garageRouter");
 
 const corsOptions = {
-    origin: "http://192.168.1.103" + port,
-    optionsSuccessStatus: 200
-}
+  origin: process.env.CORSORIGIN_URL,
+  optionsSuccessStatus: 200,
+};
 
 app.use(cookieParser());
-app.use(cors())
-
+app.use(cors(corsOptions));
 
 // page gateway
 app.use("/api/v1/user", userRouter);
@@ -140,12 +137,16 @@ app.use("/vehicles", vehicleRouter);
 app.use("/api/v1/garage", garageRoute);
 
 app.all("*", (req, res, next) => {
-    return statusFunc(res, 400, "Cannot Find The Page That You Are Searching For")
-})
+  return statusFunc(
+    res,
+    400,
+    "Cannot Find The Page That You Are Searching For"
+  );
+});
 
-app.use(globalErrorHandler)
+app.use(globalErrorHandler);
 
-// server 
+// server
 const server = app.listen(port, () => {
-    console.log("server is running at port : ", port);
-})
+  console.log("server is running at port : ", port);
+});
