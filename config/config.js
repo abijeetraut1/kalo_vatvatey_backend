@@ -19,7 +19,7 @@ if (process.env.ENVIROMENT === "development") {
         }
     }
 
-} else if (process.env.ENVIROMENT === "production") {
+} else {
     console.log("running on prodction");
     module.exports = {
         HOST: process.env.DB_HOST,

@@ -113,7 +113,7 @@ exports.create_product = async (req, res) => {
                 stack: err,
                 message: `Please Insert: ${err}`,
             });
-        } else if (process.env.ENVIROMENT === "production") {
+        } else {
             statusFunc(res, 500, {
                 msg: "SERVER IS UNDER MAINTAINENCE! PLEASE WAIT",
                 err
