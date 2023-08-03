@@ -30,5 +30,8 @@
     "rate-limit": "^0.1.1",
     "sequelize": "^6.32.1",
     "twilio": "^4.13.0"
+  },
+  "engines": {
+    "node": "18.17.0"
   }
 }
