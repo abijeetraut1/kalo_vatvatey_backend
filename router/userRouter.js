@@ -18,7 +18,7 @@ router.patch("/change_role",
 
 router.post('/forgetPassword', userController.forgetPassword);
 router.post("/resetPassword", userController.resetPassword);
-router.patch("/update_password", userController.isLoggedIn, userController.updatePassword);
+router.patch("/update_password/:id", userController.isLoggedIn, userController.updatePassword);
 
 
 module.exports = router;
